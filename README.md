@@ -8,9 +8,9 @@ can be entirely fulfilled.* "<br /><br />"Todo esforço, qualquer que seja o fim
 
 #### Prologue
 
-[semantic-image-search-client](https://github.com/huggingface/transformers.js/tree/main/examples/semantic-image-search-client)
-[semantic-image-search](https://github.com/huggingface/transformers.js/tree/main/examples/semantic-image-search)
-[tokenizer-playground](https://github.com/huggingface/transformers.js/tree/main/examples/tokenizer-playground)
+- [semantic-image-search-client](https://github.com/huggingface/transformers.js/tree/main/examples/semantic-image-search-client)
+- [semantic-image-search](https://github.com/huggingface/transformers.js/tree/main/examples/semantic-image-search)
+- [tokenizer-playground](https://github.com/huggingface/transformers.js/tree/main/examples/tokenizer-playground)
 
 
 #### V. Bibliography 
