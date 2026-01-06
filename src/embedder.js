@@ -53,4 +53,7 @@ export async function getImageEmbeds(image_url) {
 
    examples/semantic-image-search-client
    https://github.com/huggingface/transformers.js/tree/main/examples/semantic-image-search-client
+
+   examples/tokenizer-playground
+   https://github.com/huggingface/transformers.js/tree/main/examples/tokenizer-playground
 */
