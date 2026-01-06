@@ -1,4 +1,4 @@
-import { getTextEmbeds, getImageEmbeds } from './utils.js'
+import { getTextEmbeds, getImageEmbeds } from './embedder.js'
 
 /*
    Embedding from text. 
