@@ -2,8 +2,8 @@
 > "Every struggle, no matter what its goal, is forced by life to make
 adjustments; it becomes a different struggle, serves different ends,
 and sometimes accomplishes the very opposite of what it set out to
-do. Only slight goals are worth pursuing, because only a slight goal
-can be entirely fulfilled. "<br /><br />"Todo esforço, qualquer que seja o fim para que tenda, sofre, ao manifestar-se, os desvios que a vida lhe impõe; torna-se outro esforço, serve outros fins, consuma por vezes o mesmo contrário do que pretendera realizar. Só um baixo fim vale a pena, porque só um baixo fim se pode inteiramente efetuar."<br/>--- The Book of Disquiet by Fernando Pessoa
+do. *Only slight goals are worth pursuing, because only a slight goal
+can be entirely fulfilled.* "<br /><br />"Todo esforço, qualquer que seja o fim para que tenda, sofre, ao manifestar-se, os desvios que a vida lhe impõe; torna-se outro esforço, serve outros fins, consuma por vezes o mesmo contrário do que pretendera realizar. *Só um baixo fim vale a pena, porque só um baixo fim se pode inteiramente efetuar.*"<br/>--- The Book of Disquiet by Fernando Pessoa
 
 ![alt vlcsnap-2026-01-03-15h30m41s659.png](img/vlcsnap-2026-01-03-15h30m41s659.png)
 
