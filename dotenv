@@ -8,3 +8,9 @@
 # (~428M parameters), slower but more accurate. Captures finer semantic detail, 
 # better for high‑precision search or nuanced tasks.
 MODEL_ID=Xenova/clip-vit-large-patch14
+
+# SQLite DB path
+DB_PATH='./data/db.sq3'
+
+# Batch size for inserts and updates
+BATCH_SIZE=1000
