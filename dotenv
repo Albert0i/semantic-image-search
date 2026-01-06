@@ -1,0 +1,10 @@
+
+#
+# Xenova/clip-vit-base-patch16 → smaller, faster, lighter model 
+# (~86M parameters). Good for real‑time use, lower memory, quick embedding generation.
+#MODEL_ID=Xenova/clip-vit-base-patch16
+
+# Xenova/clip-vit-large-patch14 → much bigger 
+# (~428M parameters), slower but more accurate. Captures finer semantic detail, 
+# better for high‑precision search or nuanced tasks.
+MODEL_ID=Xenova/clip-vit-large-patch14
