@@ -7,7 +7,7 @@ can be entirely fulfilled.* "<br /><br />"Todo esforço, qualquer que seja o fim
 
 
 #### Prologue
-In the year of 2026, when [AI slop](https://techcrunch.com/2026/01/05/microsofts-nadella-wants-us-to-stop-thinking-of-ai-as-slop/) and [Microslop](https://cybernews.com/ai-news/microsoft-ai-microslop-copilot/?utm_source=cn_facebook&utm_medium=social&utm_campaign=cybernews&utm_content=post&source=cn_facebook&medium=social&campaign=cybernews&content=post) become internet buzzword which impoes inspection to what extend AI can do good to or do harm to human employees. While most AI ideas stagnate in verbal, the de facto that technique dominates is AI features, such as semantic search. 
+In the year of 2026, when [AI slop](https://techcrunch.com/2026/01/05/microsofts-nadella-wants-us-to-stop-thinking-of-ai-as-slop/) and [Microslop](https://cybernews.com/ai-news/microsoft-ai-microslop-copilot/?utm_source=cn_facebook&utm_medium=social&utm_campaign=cybernews&utm_content=post&source=cn_facebook&medium=social&campaign=cybernews&content=post) become internet buzzword which impoes inspection to what extend AI can do good or do harm to human employees. While most AI ideas *stagnate* on verbal stage, the very technique that dominates is so called AI features such as semantic search. 
 
 
 #### I. 
