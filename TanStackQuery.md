@@ -1,32 +1,34 @@
 
 # 📖 TanStack Query Tutorial
 
+TanStack Query (`@tanstack/query-core`) is a **framework‑agnostic data‑fetching and caching library**. It transforms raw `fetch` calls into a robust data layer with caching, retries, deduplication, and lifecycle management.
+
+---
+
 ## 1. Setup
-Install the core package:
+
+Install the core package and `node-fetch`:
+
 ```bash
 npm install @tanstack/query-core node-fetch
 ```
 
-We’ll use `node-fetch` for API calls.
-
 ---
 
-## 2. Basic Query Example
+## 2. Basic Query
+
 ```js
 import { QueryClient } from '@tanstack/query-core';
 import fetch from 'node-fetch';
 
-// Create a QueryClient (the cache manager)
 const queryClient = new QueryClient();
 
-// Define a query function
 async function fetchUsers() {
   const res = await fetch('https://jsonplaceholder.typicode.com/users');
   if (!res.ok) throw new Error('Network error');
   return res.json();
 }
 
-// Run the query
 queryClient.fetchQuery({
   queryKey: ['users'],
   queryFn: fetchUsers,
@@ -35,11 +37,12 @@ queryClient.fetchQuery({
 });
 ```
 
-👉 This caches the result under the key `['users']`.
+👉 This fetches data and caches it under the key `['users']`.
 
 ---
 
 ## 3. Caching
+
 ```js
 // First call hits the network
 await queryClient.fetchQuery({ queryKey: ['users'], queryFn: fetchUsers });
@@ -52,6 +55,7 @@ console.log('Cached result:', cached);
 ---
 
 ## 4. Deduplication
+
 ```js
 // Two simultaneous calls with the same key
 const p1 = queryClient.fetchQuery({ queryKey: ['users'], queryFn: fetchUsers });
@@ -66,6 +70,7 @@ console.log('Deduplicated results:', d1.length, d2.length);
 ---
 
 ## 5. Retries
+
 ```js
 async function unstableFetch() {
   const res = await fetch('https://httpstat.us/503'); // returns 503
@@ -87,6 +92,7 @@ queryClient.fetchQuery({
 ---
 
 ## 6. Stale State Control
+
 ```js
 await queryClient.fetchQuery({
   queryKey: ['users'],
@@ -103,6 +109,7 @@ console.log('Fresh data:', queryClient.getQueryData(['users']));
 ---
 
 ## 7. Invalidation
+
 ```js
 // Invalidate cached query
 queryClient.invalidateQueries({ queryKey: ['users'] });
@@ -114,12 +121,41 @@ console.log('Refetched after invalidation');
 
 ---
 
+## 8. Cancelling
+
+TanStack Query supports **cancelling ongoing requests** via `AbortController`. This prevents wasted bandwidth and race conditions.
+
+```js
+async function fetchUsersWithCancel({ signal }) {
+  const res = await fetch('https://jsonplaceholder.typicode.com/users', { signal });
+  if (!res.ok) throw new Error('Network error');
+  return res.json();
+}
+
+// Start a query
+const promise = queryClient.fetchQuery({
+  queryKey: ['users'],
+  queryFn: fetchUsersWithCancel,
+});
+
+// Cancel it before completion
+setTimeout(() => {
+  queryClient.cancelQueries({ queryKey: ['users'] });
+  console.log('Query cancelled');
+}, 100);
+```
+
+👉 When cancelled, the `signal` aborts the `fetch` call, and the query is marked as cancelled without caching results.
+
+---
+
 ## 🌱 Key Takeaway
-Using TanStack Query in Node.js ES6 gives you:
+TanStack Query in Node.js ES6 gives you:
 - **Caching**: Store and reuse results.  
 - **Deduplication**: Prevent duplicate requests.  
 - **Retries**: Handle transient errors gracefully.  
 - **Stale control**: Balance freshness vs performance.  
 - **Invalidation**: Keep data synchronized after changes.  
+- **Cancelling**: Abort unnecessary queries to save resources.  
 
-It transforms raw `fetch` calls into a **robust data layer** for your backend or vanilla JS apps.
+Together, these features make TanStack Query a **complete data lifecycle manager** for backend services or vanilla JS apps.
