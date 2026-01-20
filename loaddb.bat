@@ -26,7 +26,7 @@ echo.
 for %%f in ("%FOLDER%\*.sql") do (
     echo Importing %%f ...
     REM sqlite3.exe "%DB%" < "%%f"
-    sqlite3.exe "%DB%" ".read %%f"
+    sqlite3.exe -init initmax.sql "%DB%" ".read %%f"
     set /a COUNT+=1
     REM echo Imported files so far: !COUNT!
 )
