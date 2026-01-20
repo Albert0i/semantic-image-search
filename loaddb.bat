@@ -1,8 +1,9 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM loaddb.bat - load all .sqlite.sql files into a SQLite database using .read
-REM with performance PRAGMAs applied during import
+REM
+REM loaddb.bat - load all .sql files into a SQLite database using .read
+REM 
 
 if "%1"=="" (
     echo Usage: loaddb.bat database.db "C:\path\to\folder"
@@ -24,6 +25,7 @@ echo.
 
 for %%f in ("%FOLDER%\*.sql") do (
     echo Importing %%f ...
+    REM sqlite3.exe "%DB%" < "%%f"
     sqlite3.exe "%DB%" ".read %%f"
     set /a COUNT+=1
     REM echo Imported files so far: !COUNT!
