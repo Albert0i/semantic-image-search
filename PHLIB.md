@@ -3,7 +3,7 @@
 
 
 #### Prologue 
-Furture is unknown, what we know so far is called *history*. To live is not to forget... I am here to pen down my opinionated story of **PHLIB**. To begin with, let's date back to 2012. 
+Furture is unknown, what we know so far is called *history*. To live is not to forget... I am here to pen down my opinionated story behind **PHLIB**. To begin with, let's date back to 2012. 
 
 We were using DB/400 on AS/400 platform and due to statistic requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of each month, where YYYY is year, MM is month. In the year of 2017, a migration was planned from DB2/400 to Oracle. In the year of 2019, the **XRunner** project was rolled out with purpose of: 
 
