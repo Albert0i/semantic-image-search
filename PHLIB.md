@@ -17,7 +17,30 @@ Until 2025, the migration process has not finished but the target database was a
 My idea is to dump all out, convert them into general SQL syntax and feed them into some agnostic database. In this way, [SQLite](https://sqlite.org/) seems my natural choice. 
 
 
-#### I. SQL dump for Oracle 
+#### I. Generate the SQL dump
+The whole process involves: 
+1. Gather file info from snapshot libraries; 
+This requires running `DSPFD` command for each snapshot library in AS/400 command line. 
+2. Merging all file info to make a repository; 
+This requires running `INSERT INTO` statement for each snapshot library using whichever SQL client you prefer. 
+3. Run **libDump** utility dump snapshot of a year;
+This requires hosting XRunner and typing URL on browser: 
+```
+http://localhost/xr/LibDump400.aspx?libName=PH2026&data=yes
+```
+4. Convert SQL dump into general syntax;
+This requires running `oracle-to-sqlite.js` with proper parameters:
+```
+node src/oracle-to-sqlite.js "H:\\PHLIB\\2026" "H:\\PHLIB.SQLITE\\2026"
+```
+5. Load all new SQL dump into SQLite. 
+This requires running `loaddb.bat` with proper parameters:
+```
+loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
+```
+
+Repeat point 4 and 5 until snapshot libraries exhaust. 
+![alt phlib](/img/PHLIB.JPG)
 
 
 #### II. 
