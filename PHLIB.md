@@ -105,9 +105,9 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 
 
 #### Epilogue 
-In SQLite, “files” don’t exist inside the database — everything is stored in a single  file. What you can calculate are:
-1. 	Number of schema objects (tables, indexes, views, triggers) — this is the closest analogue to “number of files.”
-2. 	Total database file size in GB — using page size × page count.
+In SQLite, “files” don’t exist inside the database — everything is stored in a single `.db` file. What you *can* calculate are:
+1. **Number of schema objects** (tables, indexes, views, triggers) — this is the closest analogue to “number of files.”
+2. **Total database file size in GB** — using page size × page count.
 Here are two SQL snippets you can run directly in SQLite:
 
 1️⃣ Calculate number of “files” (schema objects
@@ -117,8 +117,7 @@ SELECT type, COUNT(*) AS object_count
 FROM sqlite_master
 GROUP BY type;
 ```
-This will return counts for , , , and .
-If you only want tables (like “data files”):
+This will return counts for `table`, `index`, `view`, and `trigger`.
 
 2️⃣ Calculate total database size in GB
 ```
@@ -126,10 +125,12 @@ If you only want tables (like “data files”):
 SELECT ROUND((page_count * page_size) / (1024.0 * 1024 * 1024), 3) AS size_gb
 FROM pragma_page_count(), pragma_page_size();
 ```
-• page_size = bytes per page
-• page_count = number of pages
-• Multiply them for total bytes, then divide by  to convert to GB.
-• ROUND(...3) gives you precision to 3 decimal places.
+• `page_size` = bytes per page
+• `page_count` = number of pages
+• Multiply them for total bytes, then divide by `1024^3` to convert to GB.
+• `ROUND(...3)` gives you precision to 3 decimal places.
+
+✨ Together, these queries let you see both how many schema objects exist and how large the database file is on disk
 
 
 ### EOF (2026/01/30)
