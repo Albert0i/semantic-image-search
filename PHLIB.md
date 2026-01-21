@@ -1,11 +1,78 @@
-###
+### The story behind PHLIB
 > "The only attitude worthy of a superior man is to persist in an activity he recognizes is useless, to observe a discipline he knows is sterile, and to apply certain norms of philosophical and metaphysical thought that he considers utterly inconsequential" <br /><br />"A única atitude digna de um homem superior é o persistir tenaz de uma atividade que se reconhece inútil, o hábito de uma disciplina que se sabe estéril, e o uso fixo de normas de pensamento filosófico e metafísico cuja importância se sente ser nula."<br/>--- The Book of Disquiet by Fernando Pessoa
 
 
 #### Prologue 
+Furture is unknown, what we know so far is called *history*. To live is not to forget... I am here to pen down my opinionated story of **PHLIB**. To begin with, let's date back to the very beginning. 
+
+In the year of 2012, due to some statistic purpose, a monthly snapshot was taken by copying production files into a new library named PH*YYYYMM*, where YYYY is year and MM is month. In the year of 2017, a migration was required from DB2/400 ro Oracle. In the year of 2019, the **XRunner** project was rolled out with purpose of: 
+
+1. Facilitate creation of database tables in Oracle according to definition in DB2/400; 
+2. Copy data from DB/400 to Oracle, this enable one-way synchronization on a scheduled base; 
+3. Facilitate execution of SQL statements on both platforms; 
+4. Dump database tables from DB/400 suitable for Oracle import; 
+
+In the year of 2025, while the migration process was not finished, target database was abandoned! And the new target database was not known so much the worse... As of this writing, there are more than eight thousands files in total and this legacy data stagnates in tangling state. 
+
+My idea is to dump all out into text format, convert from Oracle syntax into architecture agnostic format. In this case, [SQLite](https://sqlite.org/) is the ideal choice since. 
 
 
-#### 
+#### I. 
+
+#### II. 
+
+#### III. 
+
+#### IV. Full rundown for 2026.
+```
+DSPFD FILE(PH202601/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202601) 
+DSPFD FILE(PH202602/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202602) 
+DSPFD FILE(PH202603/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202603) 
+DSPFD FILE(PH202604/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202604) 
+DSPFD FILE(PH202605/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202605) 
+DSPFD FILE(PH202606/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202606) 
+DSPFD FILE(PH202607/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202607) 
+DSPFD FILE(PH202608/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202608) 
+DSPFD FILE(PH202609/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202601) 
+DSPFD FILE(PH202610/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202610) 
+DSPFD FILE(PH202611/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202611) 
+DSPFD FILE(PH202612/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202612) 
+```
+
+```
+insert into albertoi.phlibpf
+( 
+    select * from albertoi.PH202601 union 
+    select * from albertoi.PH202602 union 
+    select * from albertoi.PH202603 union 
+    select * from albertoi.PH202604 union 
+    select * from albertoi.PH202605 union 
+    select * from albertoi.PH202606 union 
+    select * from albertoi.PH202607 union 
+    select * from albertoi.PH202608 union 
+    select * from albertoi.PH202609 union 
+    select * from albertoi.PH202610 union 
+    select * from albertoi.PH202611 union 
+    select * from albertoi.PH202612
+)
+```
+
+```
+http://localhost/xr/LibDump400.aspx?libName=PH2026&data=yes
+```
+
+```
+node src/oracle-to-sqlite.js "H:\\PHLIB\\2026" "H:\\PHLIB.SQLITE\\2026"
+```
+
+```
+loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
+```
+
+
+#### V. Bibliography 
+[SQLite Is ULTIMATE Choice For 99% of Projects](https://youtu.be/9RArbqGOvsw)
+
 
 #### Epilogue 
 ```
@@ -31,3 +98,30 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2012
 ```
 
 ### EOF (2026/01/xx)
+
+
+In SQLite, “files” don’t exist inside the database — everything is stored in a single  file. What you can calculate are:
+1. 	Number of schema objects (tables, indexes, views, triggers) — this is the closest analogue to “number of files.”
+2. 	Total database file size in GB — using page size × page count.
+Here are two SQL snippets you can run directly in SQLite:
+
+1️⃣ Calculate number of “files” (schema objects
+```
+-- Count all objects in the database schema
+SELECT type, COUNT(*) AS object_count
+FROM sqlite_master
+GROUP BY type;
+```
+This will return counts for , , , and .
+If you only want tables (like “data files”):
+
+2️⃣ Calculate total database size in GB
+```
+-- Compute database file size in gigabytes
+SELECT ROUND((page_count * page_size) / (1024.0 * 1024 * 1024), 3) AS size_gb
+FROM pragma_page_count(), pragma_page_size();
+```
+• page_size = bytes per page
+• page_count = number of pages
+• Multiply them for total bytes, then divide by  to convert to GB.
+• ROUND(...3) gives you precision to 3 decimal places.
