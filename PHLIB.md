@@ -3,21 +3,22 @@
 
 
 #### Prologue 
-Furture is unknown, what we know so far is called *history*. To live is not to forget... I am here to pen down my opinionated story of **PHLIB**. To begin with, let's date back to the very beginning. 
+Furture is unknown, what we know so far is called *history*. To live is not to forget... I am here to pen down my opinionated story of **PHLIB**. To begin with, let's date back to 2012. 
 
-In the year of 2012, due to some statistic purpose, a monthly snapshot was taken by copying production files into a new library named PH*YYYYMM*, where YYYY is year and MM is month. In the year of 2017, a migration was required from DB2/400 ro Oracle. In the year of 2019, the **XRunner** project was rolled out with purpose of: 
+The chronology is due to statistic requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of a month, where YYYY is year, MM is month. We were running DB/400 on AS/400 platform. In the year of 2017, a migration was planned from DB2/400 to Oracle. In the year of 2019, the **XRunner** project was rolled out with purpose of: 
 
-1. Facilitate creation of database tables in Oracle according to definition in DB2/400; 
-2. Copy data from DB/400 to Oracle, this enable one-way synchronization on a scheduled base; 
-3. Facilitate execution of SQL statements on both platforms; 
-4. Dump database tables from DB/400 suitable for Oracle import; 
+1. Facilitates creation of database tables in Oracle according to definition in DB2/400; 
+2. Copies data from DB/400 to Oracle, this enables one-way synchronization on a scheduled base; 
+3. Facilitates execution of SQL statements on both platforms; 
+4. Dump database tables from DB/400 in format suitable for Oracle import; 
 
-In the year of 2025, while the migration process was not finished, target database was abandoned! And the new target database was not known so much the worse... As of this writing, there are more than eight thousands files in total and this legacy data stagnates in tangling state. 
+Until 2025, the migration process has not finished but the target database was abandoned! And the new database is not known so much the worse... As of this writing, there are more than eight thousands snapshot files in total... and this legacy data gets detained and stagnatd. My concern is in a couple of years, AS/400 will be fade out and all those tables will be lost in time, like tears in the rain. 
 
-My idea is to dump all out into text format, convert from Oracle syntax into architecture agnostic format. In this case, [SQLite](https://sqlite.org/) is the ideal choice since. 
+My idea is to dump all out, convert them into into general SQL syntax. In this way, [SQLite](https://sqlite.org/) seems a natural choice. 
 
 
-#### I. 
+#### I. SQL dump for Oracle 
+
 
 #### II. 
 
