@@ -52,11 +52,7 @@ Repeat point 4 and 5 until snapshot libraries exhaust. And then re-open the data
 ![alt phlib](/img/PHLIB.JPG)
 
 
-#### II. 
-
-#### III. 
-
-#### IV. Full rundown for 2026.
+#### II. Full rundown for 2026.
 ```
 DSPFD FILE(PH202601/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202601) 
 DSPFD FILE(PH202602/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202602) 
@@ -103,7 +99,7 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 ```
 
 
-#### V. Bibliography 
+#### III. Bibliography 
 1. [SQLite Is ULTIMATE Choice For 99% of Projects](https://youtu.be/9RArbqGOvsw)
 2. [The Book of Disquiet by Fernando Pessoa](https://dn720004.ca.archive.org/0/items/english-collections-1/Book%20of%20Disquiet%2C%20The%20-%20Fernando%20Pessoa.pdf)
 
