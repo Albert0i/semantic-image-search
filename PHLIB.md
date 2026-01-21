@@ -48,7 +48,7 @@ This requires running `loaddb.bat` with proper parameters:
 loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 ```
 
-Repeat point 4 and 5 until snapshot libraries exhaust. 
+Repeat point 4 and 5 until snapshot libraries exhaust. And then re-open the database with: 
 ![alt phlib](/img/PHLIB.JPG)
 
 
