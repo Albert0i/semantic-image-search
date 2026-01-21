@@ -12,7 +12,7 @@ We were using DB/400 on AS/400 platform and due to statistic requirement, a mont
 3. Facilitates execution of SQL statements on both platforms; 
 4. Dump database tables from DB/400 in format suitable for Oracle import; 
 
-Until 2025, the migration process has not finished but the target database was abandoned! And the new database is not known so much the worse... As of this writing, there are more than eight thousands snapshot files in total... and this legacy data gets detained and stagnatd. My concern is in a couple of years, AS/400 will be fade out and all those tables will be lost in time, like tears in the rain. 
+Until 2025, the migration process has not finished but the target database was abandoned! And the new database is not known so much the worse... As of this writing, there are more than eight thousands snapshot files in total... and this legacy data gets detained and stagnatd. My concern is in a couple of years, AS/400 will fade out and [all those tables will be lost in time, like tears in the rain](https://www.reddit.com/r/QuotesPorn/comments/bn497r/all_those_moments_will_be_lost_in_time_like_tears/). 
 
 My idea is to dump all out, convert them into into general SQL syntax. In this way, [SQLite](https://sqlite.org/) seems a natural choice. 
 
