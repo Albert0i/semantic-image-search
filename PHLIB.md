@@ -22,21 +22,25 @@ The whole process involves:
 1. Gather file info from snapshot libraries; 
 
 This requires running `DSPFD` command for each snapshot library in AS/400 command line. 
+
 2. Merging all file info to make a repository; 
 
 This requires running `INSERT INTO` statement for each snapshot library using whichever SQL client you prefer. 
+
 3. Run **libDump** utility dump snapshot of a year;
 
 This requires hosting XRunner and typing URL on browser: 
 ```
 http://localhost/xr/LibDump400.aspx?libName=PH2026&data=yes
 ```
+
 4. Convert SQL dump into general syntax;
 
 This requires running `oracle-to-sqlite.js` with proper parameters:
 ```
 node src/oracle-to-sqlite.js "H:\\PHLIB\\2026" "H:\\PHLIB.SQLITE\\2026"
 ```
+
 5. Load all new SQL dump into SQLite;  
 
 This requires running `loaddb.bat` with proper parameters:
