@@ -53,6 +53,7 @@ Repeat point 4 and 5 until snapshot libraries exhaust. And then re-open the data
 
 
 #### II. Full rundown for 2026.
+1. 
 ```
 DSPFD FILE(PH202601/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202601) 
 DSPFD FILE(PH202602/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202602) 
@@ -68,6 +69,7 @@ DSPFD FILE(PH202611/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH2026
 DSPFD FILE(PH202612/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202612) 
 ```
 
+2. 
 ```
 insert into albertoi.phlibpf
 ( 
@@ -86,14 +88,17 @@ insert into albertoi.phlibpf
 )
 ```
 
+3. 
 ```
 http://localhost/xr/LibDump400.aspx?libName=PH2026&data=yes
 ```
 
+4. 
 ```
 node src/oracle-to-sqlite.js "H:\\PHLIB\\2026" "H:\\PHLIB.SQLITE\\2026"
 ```
 
+5. 
 ```
 loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 ```
