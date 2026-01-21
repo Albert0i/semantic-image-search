@@ -72,7 +72,8 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 
 
 #### V. Bibliography 
-[SQLite Is ULTIMATE Choice For 99% of Projects](https://youtu.be/9RArbqGOvsw)
+1. [SQLite Is ULTIMATE Choice For 99% of Projects](https://youtu.be/9RArbqGOvsw)
+2. [The Book of Disquiet by Fernando Pessoa](https://dn720004.ca.archive.org/0/items/english-collections-1/Book%20of%20Disquiet%2C%20The%20-%20Fernando%20Pessoa.pdf)
 
 
 #### Epilogue 
