@@ -5,7 +5,7 @@
 #### Prologue 
 Furture is unknown, what we know so far is called *history*. To live is not to forget... I am here to pen down my opinionated story of **PHLIB**. To begin with, let's date back to 2012. 
 
-The chronology is due to statistic requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of a month, where YYYY is year, MM is month. We were running DB/400 on AS/400 platform. In the year of 2017, a migration was planned from DB2/400 to Oracle. In the year of 2019, the **XRunner** project was rolled out with purpose of: 
+Due to statistic requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of a month, where YYYY is year, MM is month. We were running DB/400 on AS/400 platform. In the year of 2017, a migration was planned from DB2/400 to Oracle. In the year of 2019, the **XRunner** project was rolled out with purpose of: 
 
 1. Facilitates creation of database tables in Oracle according to definition in DB2/400; 
 2. Copies data from DB/400 to Oracle, this enables one-way synchronization on a scheduled base; 
