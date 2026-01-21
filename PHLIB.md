@@ -105,31 +105,6 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 
 
 #### Epilogue 
-```
-DSPFD FILE(PH202509/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202509) 
-
-insert into albertoi.phlibpf
-( select * from albertoi.PH202509 )
-
-SELECT * FROM albertoi/phlibpf   
-where atlib='PH202509'    
-```
-
-```
-http://localhost/xr/LibDump400.aspx?libName=PH2025&data=yes
-```
-
-```
-node src/oracle-to-sqlite.js "H:\\PHLIB\\2012" "H:\\PHLIB.SQLITE\\2012"
-
-loaddb.bat data\db.sq3 H:\PHLIB.SQLITE\2012
-
-loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2012
-```
-
-### EOF (2026/01/xx)
-
-
 In SQLite, “files” don’t exist inside the database — everything is stored in a single  file. What you can calculate are:
 1. 	Number of schema objects (tables, indexes, views, triggers) — this is the closest analogue to “number of files.”
 2. 	Total database file size in GB — using page size × page count.
@@ -155,3 +130,6 @@ FROM pragma_page_count(), pragma_page_size();
 • page_count = number of pages
 • Multiply them for total bytes, then divide by  to convert to GB.
 • ROUND(...3) gives you precision to 3 decimal places.
+
+
+### EOF (2026/01/30)
