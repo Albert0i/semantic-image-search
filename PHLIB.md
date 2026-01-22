@@ -39,7 +39,7 @@ insert into albertoi.phlibpf
 
 This requires hosting XRunner and type in URL on browser: 
 ```
-http://localhost/xr/LibDump400.aspx?libName=PH2026&data=yes
+http://localhost/xr/LibDump400.aspx?libName=PH2025&data=yes
 ```
 ![alt libDump](img/libDump.JPG)
 
