@@ -3,42 +3,51 @@
 
 
 #### Prologue 
-Furture is unknown, what we know so far is called *history*. To live is not to forget... I am here to pen down my opinionated story behind **PHLIB**. To begin with, let's date back to 2012. 
+Furture is unknown, what we know so far is called *history*. To live is not to forget, to write is not to forget, idiots forget while geniuses forgive... I am here to pen down my opinionated story about **PHLIB**. To begin with, let's date back to 2012. 
 
-We were using DB/400 on AS/400 platform and due to statistic requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of each month, where YYYY is year, MM is month. In the year of 2017, a migration was planned from DB2/400 to Oracle. In the year of 2019, the **XRunner** project was rolled out with purpose of: 
+At that time, We were using DB/400 on AS/400 as main platform and due to statistic requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of each month, where YYYY is year, MM is month. In the year of 2017, a migration was planned from DB2/400 to Oracle. In the year of 2019, the **XRunner** project, which was written in ASP.NET 2.0 WebForm, rolled out with purpose of: 
 
-1. Facilitates creation of database tables in Oracle according to definition in DB2/400; 
+1. Facilitates creation of tables in Oracle according to definition in DB2/400; 
 2. Copies data from DB/400 to Oracle, this enables one-way synchronization on a scheduled base; 
 3. Facilitates execution of SQL statements on both platforms; 
-4. Dump database tables from DB/400 in format suitable for Oracle import; 
+4. Dump tables from DB/400 in text suitable for Oracle import; 
 
-Until 2025, the migration process has not finished but the target database was abandoned! And the new database is not known so much the worse... As of this writing, there are more than eight thousands snapshot files in total... and this legacy data gets detained and stagnatd. My concern is in a couple of years, AS/400 will fade out and [all those tables will be lost in time, like tears in the rain](https://www.reddit.com/r/QuotesPorn/comments/bn497r/all_those_moments_will_be_lost_in_time_like_tears/). 
+Until 2025, the migration process has not finished but the target database was abandoned! And the new database is not known so much the worse... As of this writing, there are more than 8000 tables in snapshot... and this legacy data gets detained and stagnates and in a couple of years, AS/400 will fade out and [all those tables will be lost in time, like tears in the rain](https://www.reddit.com/r/QuotesPorn/comments/bn497r/all_those_moments_will_be_lost_in_time_like_tears/). 
 
-My idea is to dump all out, convert them into general SQL syntax and feed them into some agnostic database. In this way, [SQLite](https://sqlite.org/) seems my natural choice. 
+My idea is to dump all out, convert them into general SQL syntax and feed them into a third party database, [SQLite](https://sqlite.org/) becomes the natural choice. 
 
 
 #### I. Generate the SQL dump
-The whole process involves: 
-1. Gather file info from snapshot libraries; 
+To be honest, the whole process is quite complicated which involves: 
+1. Gather meta info of tables from snapshot libraries; 
 
 This requires running `DSPFD` command for each snapshot library in AS/400 command line. 
+```
+DSPFD FILE(PH202509/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH202509) 
+```
+![alt DSPFD](img/DSPFD.JPG)
 
-2. Merging all file info to make a repository; 
+2. Merging meta info repository; 
 
 This requires running `INSERT INTO` statement for each snapshot library using whichever SQL client you prefer. 
+```
+insert into albertoi.phlibpf
+( select * from albertoi.PH202509 )
+```
 
 3. Run **libDump** utility dump snapshot of a year;
 
-This requires hosting XRunner and typing URL on browser: 
+This requires hosting XRunner and type in URL on browser: 
 ```
 http://localhost/xr/LibDump400.aspx?libName=PH2026&data=yes
 ```
+![alt libDump](img/libDump.JPG)
 
 4. Convert SQL dump into general syntax;
 
 This requires running `oracle-to-sqlite.js` with proper parameters:
 ```
-node src/oracle-to-sqlite.js "H:\\PHLIB\\2026" "H:\\PHLIB.SQLITE\\2026"
+node src/oracle-to-sqlite.js "H:\\PHLIB\\2025" "H:\\PHLIB.SQLITE\\2025"
 ```
 
 5. Load all new SQL dump into SQLite;  
@@ -48,7 +57,7 @@ This requires running `loaddb.bat` with proper parameters:
 loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 ```
 
-Repeat point 4 and 5 until snapshot libraries exhaust. And then re-open the database with: 
+Repeat point 4 and 5 until snapshot libraries exhaust. When it is dont, the snapshots can be queried with ease: 
 ![alt phlib](/img/PHLIB.JPG)
 
 
