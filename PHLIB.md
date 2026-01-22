@@ -54,10 +54,10 @@ node src/oracle-to-sqlite.js "H:\\PHLIB\\2025" "H:\\PHLIB.SQLITE\\2025"
 
 This requires running `loaddb.bat` with proper parameters:
 ```
-loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
+loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2025
 ```
 
-Repeat point 4 and 5 until for all snapshot libraries. When it is dont, the snapshot libraries can be queried with ease: 
+Repeat point 4 and 5 for all snapshot libraries. When it is dont, the snapshot libraries can be queried with ease: 
 ![alt phlib](/img/PHLIB.JPG)
 
 
