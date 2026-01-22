@@ -57,7 +57,7 @@ This requires running `loaddb.bat` with proper parameters:
 loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2025
 ```
 
-Repeat point 4 and 5 for all snapshot libraries. When it is dont, the snapshot libraries can be queried with ease: 
+Repeat point 4 and 5 for all snapshot libraries. When it is done, you can query snapshot database with ease: 
 ![alt phlib](/img/PHLIB.JPG)
 
 
