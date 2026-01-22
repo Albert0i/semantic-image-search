@@ -12,7 +12,7 @@ At that time, We were using DB/400 on AS/400 as main platform and due to statist
 3. Facilitates execution of SQL statements on both platforms; 
 4. Dump tables from DB/400 in text suitable for Oracle import; 
 
-Until 2025, the migration process has not finished but the target database was abandoned! And the new database is not known so much the worse... As of this writing, there are more than 8000 tables in snapshot... and this legacy data gets detained and stagnates and in a couple of years, AS/400 will fade out and [all those tables will be lost in time, like tears in the rain](https://www.reddit.com/r/QuotesPorn/comments/bn497r/all_those_moments_will_be_lost_in_time_like_tears/). 
+Until 2025, the migration process has not finished but the target database was abandoned! And the new database is not known so much the worse... As of this writing, there are more than 8000 tables in snapshot... and this legacy data gets detained and stagnates. In a couple of years, AS/400 will fade out and [all those tables will be lost in time, like tears in the rain](https://www.reddit.com/r/QuotesPorn/comments/bn497r/all_those_moments_will_be_lost_in_time_like_tears/). 
 
 My idea is to dump all out, convert them into general SQL syntax and feed them into a third party database, [SQLite](https://sqlite.org/) becomes the natural choice. 
 
@@ -27,7 +27,7 @@ DSPFD FILE(PH202509/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH2025
 ```
 ![alt DSPFD](img/DSPFD.JPG)
 
-2. Merging meta info repository; 
+2. Add meta info to repository; 
 
 This requires running `INSERT INTO` statement for each snapshot library using whichever SQL client you prefer. 
 ```
@@ -35,7 +35,7 @@ insert into albertoi.phlibpf
 ( select * from albertoi.PH202509 )
 ```
 
-3. Run **libDump** utility dump snapshot of a year;
+3. Run **libDump** to dump snapshot tables of a year;
 
 This requires hosting XRunner and type in URL on browser: 
 ```
@@ -57,7 +57,7 @@ This requires running `loaddb.bat` with proper parameters:
 loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 ```
 
-Repeat point 4 and 5 until snapshot libraries exhaust. When it is dont, the snapshots can be queried with ease: 
+Repeat point 4 and 5 until for all snapshot libraries. When it is dont, the snapshot libraries can be queried with ease: 
 ![alt phlib](/img/PHLIB.JPG)
 
 
