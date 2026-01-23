@@ -1,46 +1,60 @@
-import fs from 'fs/promises';
-import fsSync from 'fs';
-import path from 'path';
-import crypto from 'crypto';
 
 import { createHash } from 'crypto';
-import { createReadStream } from 'fs';
-import { readFile } from 'fs/promises';
-import { isText } from 'istextorbinary';
+import { readFileSync } from 'fs';
+
+export function sha256FileSync(path) {
+  const fileBuffer = readFileSync(path);   // read file into memory
+  const hash = createHash('sha256');       // create SHA-256 hash object
+  hash.update(fileBuffer);                 // feed file data
+  return hash.digest('hex');               // return hex string
+}
+
+// Usage example
+//console.log('SHA-256:', sha256FileSync('./image.png'));
+
+// import fs from 'fs/promises';
+// import fsSync from 'fs';
+// import path from 'path';
+// import crypto from 'crypto';
+
+// import { createHash } from 'crypto';
+// import { createReadStream } from 'fs';
+// import { readFile } from 'fs/promises';
+// import { isText } from 'istextorbinary';
 
 // 🔍 Check if file is hidden (starts with . or $)
-export async function isHidden(filePath) {
-  try {
-    //const stats = await fs.lstat(filePath);
-    const stats = fsSync.lstat(filePath);
-    const name = path.basename(filePath);
-    return name.startsWith('.') || (stats.mode & 0o100000 && name.startsWith('$'));
-  } catch {
-    return false;
-  }
-}
+// export async function isHidden(filePath) {
+//   try {
+//     //const stats = await fs.lstat(filePath);
+//     const stats = fsSync.lstat(filePath);
+//     const name = path.basename(filePath);
+//     return name.startsWith('.') || (stats.mode & 0o100000 && name.startsWith('$'));
+//   } catch {
+//     return false;
+//   }
+// }
 
 // 🔐 Generate SHA-256 hash of file contents
-export async function hashFile(filePath) {
-  return new Promise((resolve, reject) => {
-    const hash = crypto.createHash('sha256');
-    const stream = fsSync.createReadStream(filePath);
-    stream.on('data', chunk => hash.update(chunk));
-    stream.on('end', () => resolve(hash.digest('hex')));
-    stream.on('error', reject);
-  });
-}
+// export async function hashFile(filePath) {
+//   return new Promise((resolve, reject) => {
+//     const hash = crypto.createHash('sha256');
+//     const stream = fsSync.createReadStream(filePath);
+//     stream.on('data', chunk => hash.update(chunk));
+//     stream.on('end', () => resolve(hash.digest('hex')));
+//     stream.on('error', reject);
+//   });
+// }
 
 // Determines if a file is text-only using istextorbinary
-export async function isTextFile (filePath) {
-  try {
-    const buffer = await readFile(filePath);
-    return isText(filePath, buffer);
-  } catch (error) {
-    console.error(`Error checking file type for ${filePath}:`, error);
-    return false;
-  }
-};
+// export async function isTextFile (filePath) {
+//   try {
+//     const buffer = await readFile(filePath);
+//     return isText(filePath, buffer);
+//   } catch (error) {
+//     console.error(`Error checking file type for ${filePath}:`, error);
+//     return false;
+//   }
+// };
 
 
 /**
@@ -80,132 +94,131 @@ export async function hashFile(filePath) {
   });
 }
 */
-export const analyzeFile = async (filePath) => {
-  return new Promise((resolve, reject) => {
-    const sha = createHash('sha256');
-    const firstChunks = [];
-    let totalRead = 0;
-    const maxBytes = 512;
+// export const analyzeFile = async (filePath) => {
+//   return new Promise((resolve, reject) => {
+//     const sha = createHash('sha256');
+//     const firstChunks = [];
+//     let totalRead = 0;
+//     const maxBytes = 512;
 
-    const stream = createReadStream(filePath);
-    stream.on('data', chunk => {
-      sha.update(chunk);
+//     const stream = createReadStream(filePath);
+//     stream.on('data', chunk => {
+//       sha.update(chunk);
 
-      if (totalRead < maxBytes) {
-        const remaining = maxBytes - totalRead;
-        firstChunks.push(chunk.slice(0, remaining));
-        totalRead += chunk.length;
-      }
-    });
+//       if (totalRead < maxBytes) {
+//         const remaining = maxBytes - totalRead;
+//         firstChunks.push(chunk.slice(0, remaining));
+//         totalRead += chunk.length;
+//       }
+//     });
 
-    stream.on('end', () => {
-      const hash = sha.digest('hex');
-      const buffer = Buffer.concat(firstChunks);
-      //const isText = isTextSync(filePath, buffer);
-      const isTextFile = isText(null, buffer);      
-      // resolve({ hash, isText });
-      const text = buffer.toString('utf8');
-      resolve ({ 
-        hash, 
-        isTextFile, 
-        content: isTextFile ? text : ''
-      });
-    });
+//     stream.on('end', () => {
+//       const hash = sha.digest('hex');
+//       const buffer = Buffer.concat(firstChunks);
+//       //const isText = isTextSync(filePath, buffer);
+//       const isTextFile = isText(null, buffer);      
+//       // resolve({ hash, isText });
+//       const text = buffer.toString('utf8');
+//       resolve ({ 
+//         hash, 
+//         isTextFile, 
+//         content: isTextFile ? text : ''
+//       });
+//     });
 
-    stream.on('error', err => {
-      console.error(`Error analyzing file ${filePath}:`, err);
-      resolve({ hash: null, isText: false });
-    });
-  });
-};
+//     stream.on('error', err => {
+//       console.error(`Error analyzing file ${filePath}:`, err);
+//       resolve({ hash: null, isText: false });
+//     });
+//   });
+// };
 
 
 
 
 // 🧭 Recursively walk through folder and yield file paths
-export async function* walk(dir) {
-  try {
-    const dirHandle = await fs.opendir(dir);
+// export async function* walk(dir) {
+//   try {
+//     const dirHandle = await fs.opendir(dir);
 
-    for await (const entry of dirHandle) {
-      const fullPath = path.join(dir, entry.name);
+//     for await (const entry of dirHandle) {
+//       const fullPath = path.join(dir, entry.name);
 
-      if (ignoreList.includes(entry.name)) {
-        console.log(`🛡️ Ignored: ${fullPath}`);
-        continue;
-      }
+//       if (ignoreList.includes(entry.name)) {
+//         console.log(`🛡️ Ignored: ${fullPath}`);
+//         continue;
+//       }
 
-      if (await isHidden(fullPath)) {
-        console.log(`🛡️ Ignored hidden: ${fullPath}`);
-        continue
-      };
+//       if (await isHidden(fullPath)) {
+//         console.log(`🛡️ Ignored hidden: ${fullPath}`);
+//         continue
+//       };
 
-      try {
-        const stat = await fs.lstat(fullPath);
+//       try {
+//         const stat = await fs.lstat(fullPath);
 
-        if (stat.isDirectory()) {
-          yield* walk(fullPath);
-        } else if (stat.isFile()) {
-          const ext = path.extname(entry.name).toLowerCase();
+//         if (stat.isDirectory()) {
+//           yield* walk(fullPath);
+//         } else if (stat.isFile()) {
+//           const ext = path.extname(entry.name).toLowerCase();
           
-          if (ignoreExtensions.includes(ext)) {
-            console.log(`🛡️ Ignored extension: ${fullPath}`);
-            continue;
-          }
+//           if (ignoreExtensions.includes(ext)) {
+//             console.log(`🛡️ Ignored extension: ${fullPath}`);
+//             continue;
+//           }
 
-          if (stat.size === 0) {
-            console.log(`🛡️ Ignored empty file: ${fullPath}`);
-            continue;
-          }
+//           if (stat.size === 0) {
+//             console.log(`🛡️ Ignored empty file: ${fullPath}`);
+//             continue;
+//           }
 
-          yield fullPath;
-        }
-      } catch (err) {
-        console.error(`⚠️ Error accessing ${fullPath}:`, err.message);
-        continue;
-      }
-    }
-  } catch (err) {
-    if (err.code === 'EPERM' || err.code === 'EACCES') {
-      console.warn(`🚫 Skipped protected folder: ${dir}`);
-    } else {
-      console.error(`⚠️ Error accessing ${dir}:`, err.message);
-    }
-  }
-}
+//           yield fullPath;
+//         }
+//       } catch (err) {
+//         console.error(`⚠️ Error accessing ${fullPath}:`, err.message);
+//         continue;
+//       }
+//     }
+//   } catch (err) {
+//     if (err.code === 'EPERM' || err.code === 'EACCES') {
+//       console.warn(`🚫 Skipped protected folder: ${dir}`);
+//     } else {
+//       console.error(`⚠️ Error accessing ${dir}:`, err.message);
+//     }
+//   }
+// }
 
 
 // 🛡️ Ignore list: folders/files to skip by name
-export const ignoreList = [
-  'node_modules', '__pycache__', '.git', '.svn', '.DS_Store',
-  'Thumbs.db', 'desktop.ini', '$Recycle.Bin', 'System Volume Information', 'Program Files',
-  'Program Files (x86)', 'Windows', 'AppData', 'Local Settings', 'Recovery',
-  'PerfLogs', 'Temp', 'Tmp',  'cache', 'Cache', 
-  '__MACOSX', '.Spotlight-V100', '.Trashes', 'ehthumbs.db', 'pagefile.sys',
-  'hiberfil.sys', 'swapfile.sys', '.gitignore', '.gitattributes', 'index.html',
-  '$RECYCLE.BIN', '.env', '.dockerignore'
-];
+// export const ignoreList = [
+//   'node_modules', '__pycache__', '.git', '.svn', '.DS_Store',
+//   'Thumbs.db', 'desktop.ini', '$Recycle.Bin', 'System Volume Information', 'Program Files',
+//   'Program Files (x86)', 'Windows', 'AppData', 'Local Settings', 'Recovery',
+//   'PerfLogs', 'Temp', 'Tmp',  'cache', 'Cache', 
+//   '__MACOSX', '.Spotlight-V100', '.Trashes', 'ehthumbs.db', 'pagefile.sys',
+//   'hiberfil.sys', 'swapfile.sys', '.gitignore', '.gitattributes', 'index.html',
+//   '$RECYCLE.BIN', '.env', '.dockerignore'
+// ];
 
 // 🛡️ Ignore extensions: skip files with these suffixes
-export const ignoreExtensions = [
-  '.aof', '.incr.aof', '.tmp', '.dmp', '.log',
-  '.dump', '.txt~', '.lnk', '.bak', '.swp', 
-  '.DS_Store', 'desktop.ini', '.env', '.env.development', '.env.production'
-];
+// export const ignoreExtensions = [
+//   '.aof', '.incr.aof', '.tmp', '.dmp', '.log',
+//   '.dump', '.txt~', '.lnk', '.bak', '.swp', 
+//   '.DS_Store', 'desktop.ini', '.env', '.env.development', '.env.production'
+// ];
 
 
 // All used SQLs
 export const SQL_create_table = `
-    DROP TABLE IF EXISTS files;
-    CREATE TABLE files (
+    DROP TABLE IF EXISTS images;
+    CREATE TABLE images (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       fileName VARCHAR(255) NOT NULL,
       fullPath VARCHAR(255) NOT NULL,
       fileFormat VARCHAR(16) NOT NULL,
-      fileSize INTEGER NOT NULL,
-      isTextFile INTEGER NOT NULL DEFAULT 0, 
-      content text NOT NULL DEFAULT '',
+      fileSize INTEGER NOT NULL,      
       hash CHAR(64) NOT NULL,
+      embedding float[768] NOT NULL, 
       indexedAt VARCHAR(24) NOT NULL,
       createdAt VARCHAR(24) NOT NULL,
       modifiedAt VARCHAR(24) NOT NULL,
@@ -264,30 +277,30 @@ export const SQL_create_table_fs = `
     END;
 `
 
-export function writeAudit(db, key, value, flush = true) {
-  const sql = `
-    INSERT INTO audit (auditKey, auditValue)
-    VALUES (?, ?)
-  `;
+// export function writeAudit(db, key, value, flush = true) {
+//   const sql = `
+//     INSERT INTO audit (auditKey, auditValue)
+//     VALUES (?, ?)
+//   `;
 
-  try {
-    db.prepare(sql).run(key, value);
-    console.log(`✅ Audit added: ${key} → ${value}`);
+//   try {
+//     db.prepare(sql).run(key, value);
+//     console.log(`✅ Audit added: ${key} → ${value}`);
 
-    if (flush) {
-      db.exec('PRAGMA wal_checkpoint(FULL)');
-      console.log('🧾 WAL checkpoint triggered — data flushed to disk.');
-    }
-  } catch (err) {
-    console.error('❌ Failed to write audit entry:', err);
-  }
-}
+//     if (flush) {
+//       db.exec('PRAGMA wal_checkpoint(FULL)');
+//       console.log('🧾 WAL checkpoint triggered — data flushed to disk.');
+//     }
+//   } catch (err) {
+//     console.error('❌ Failed to write audit entry:', err);
+//   }
+// }
 
-export function removeDuplicates(input) {
-  return [...new Set(
-    input
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean)
-  )].join(', ');
-}
+// export function removeDuplicates(input) {
+//   return [...new Set(
+//     input
+//       .split(',')
+//       .map(s => s.trim())
+//       .filter(Boolean)
+//   )].join(', ');
+// }

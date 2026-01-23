@@ -8,6 +8,7 @@
     "build:css": "postcss ./src/public/styles/styles.css -o ./src/public/styles/build.css --watch",
     "dev": "concurrently \"npm:build:css\" \"npm:start\"",
     "sql": "sqlite3 -init initvec.sql ./data/samples.db",
+    "scan": "node src/scanFolder.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +18,7 @@
   "dependencies": {
     "@xenova/transformers": "^2.17.2",
     "better-sqlite3": "^12.5.0",
+    "crypto": "^1.0.1",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "express": "^5.2.1",

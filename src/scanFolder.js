@@ -3,6 +3,9 @@
 */
 import fs from 'fs';
 import path from 'path';
+import { db } from './sqlite.js'
+import { sha256FileSync } from './utils.js'
+import { getImageEmbeds } from './embedder.js'
 
 const IMG_EXTENSIONS = /\.(jpg|jpeg|png|bmp|gif|tiff)$/i;
 const DEFAULT_FOLDER = path.resolve('./samples');
@@ -31,9 +34,50 @@ function scanDirectory(dir) {
     if (entry.isDirectory()) {
       scanDirectory(fullPath);
     } else if (IMG_EXTENSIONS.test(entry.name)) {
-      imagePaths.push(fullPath);
+      imageCount++; 
+      insertDatabase(fullPath)
+      // imagePaths.push(fullPath);      
+      // const stat = fs.lstatSync(fullPath);
+      // console.log('stat = ', stat)
+
     }
   }
+}
+
+function insertDatabase(filePath) {
+    const stat = fs.statSync(filePath);
+    const now = new Date();
+
+    const fileName = path.basename(filePath);
+    const fileFormat = path.extname(filePath).slice(1).toLowerCase();
+    const fileSize = stat.size;
+    const indexedAt = now.toISOString();
+    const createdAt = stat.birthtime.toISOString();
+    const modifiedAt = stat.mtime.toISOString();
+    const hash = sha256FileSync(filePath)
+        
+    // 🧾 Prepare insert statement 
+    const insert = db.prepare(`INSERT INTO images (fileName, fullPath, fileFormat, fileSize, hash, 
+                                     indexedAt, createdAt, modifiedAt, updateIdent)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    const insertStmt = db.prepare("INSERT INTO images_vec(rowid, embedding) VALUES (?, ?)");
+
+    // getImageEmbeds(filePath).then(embedding => {
+    //   console.log('embedding = ', embedding.data)
+    //   insert.run(fileName, filePath, fileFormat, fileSize, embedding.data, 
+    //              hash, indexedAt, createdAt, modifiedAt, 0)
+    // }).catch(error => {
+    //   console.log(error)
+    // })
+    const result = insert.run(fileName, filePath, fileFormat, fileSize, hash, indexedAt, createdAt, modifiedAt, 0)
+    const id = result.lastInsertRowid
+    //console.log('result = ', result)
+    getImageEmbeds(filePath).then(embedding => {
+          console.log('embedding = ', embedding.data)
+          insertStmt.run(BigInt(id), new Uint8Array(new Float32Array(embedding.data).buffer));
+        }).catch(error => {
+          console.log(error)
+        })
 }
 
 /**
@@ -45,7 +89,7 @@ function writeOutput() {
   for (const fullPath of imagePaths) {
     const normalizedPath = fullPath.replace(/\\/g, '/');
     outputStream.write(normalizedPath + '\n');
-    imageCount++;
+    //imageCount++;
   }
 
   outputStream.end();
@@ -54,7 +98,7 @@ function writeOutput() {
 /**
  * Main entry point
  */
-function main() {
+async function main() {
   const startTime = Date.now();
 
   if (!fs.existsSync(targetFolder)) {
@@ -68,11 +112,11 @@ function main() {
 
   console.log(`🧭 Scanning folder: ${targetFolder}`);
   scanDirectory(targetFolder);
-  writeOutput();
+  //writeOutput();
 
   const durationSec = ((Date.now() - startTime) / 1000).toFixed(2);
   console.log(`✅ Scan complete: ${imageCount} images found in ${folderCount} folders`);
-  console.log(`📄 List saved to: ${outputFile}`);
+  //console.log(`📄 List saved to: ${outputFile}`);
   console.log(`⏱️ Time spent: ${durationSec} seconds`);
 }
 
@@ -80,3 +124,29 @@ function main() {
    main
 */
 main();
+
+/*
+CREATE TABLE images (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fileName VARCHAR(255) NOT NULL,
+    fullPath VARCHAR(255) NOT NULL,
+    fileFormat VARCHAR(16) NOT NULL,
+    fileSize INTEGER NOT NULL,      
+    hash CHAR(64) NOT NULL,
+    indexedAt VARCHAR(24) NOT NULL,
+    createdAt VARCHAR(24) NOT NULL,
+    modifiedAt VARCHAR(24) NOT NULL,
+    updateIdent INTEGER NOT NULL DEFAULT 0,
+    UNIQUE(fullPath)
+);
+
+CREATE VIRTUAL TABLE images_vec USING vec0 (
+    embedding float[768],
+);
+
+SELECT rowid, distance
+FROM images_vec 
+WHERE embedding MATCH (select embedding from images_vec where rowid=400)
+ORDER BY distance
+LIMIT 3; 
+*/
