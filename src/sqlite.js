@@ -1,11 +1,12 @@
 /*
     Promise-based wrapper
 */
+import 'dotenv/config'
 import Database from 'better-sqlite3';
 import * as sqliteVec from 'sqlite-vec';
 import path from 'path';
 
-const dbPath = process.env.DB_PATH || path.resolve('./data/db.sq3');
+const dbPath = process.env.DB_PATH || path.resolve('./data/data.db');
 const db = new Database(dbPath); // synchronous, no await
 
 // Sets the journal mode to WAL, which stands for Write-Ahead Logging. 
