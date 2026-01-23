@@ -852,25 +852,25 @@ SQLite is not just a database engine; it’s a philosophy of simplicity and reli
 
 ---
 
-# 🔮 Bonus: Enabling Semantic Search with SQLite‑vec
+## 🔮 Bonus: Enabling Semantic Search with SQLite‑vec
 
 SQLite‑vec isn’t just about storing embeddings — it unlocks **semantic search** directly inside SQLite. By combining text embeddings with vector similarity queries, you can retrieve results based on meaning rather than exact keywords.
 
 ---
 
-## 1. 🧩 What Is Semantic Search?
+### 1. 🧩 What Is Semantic Search?
 Traditional SQL queries match exact strings (`WHERE title LIKE '%linux%'`). Semantic search instead compares **vector embeddings** of text, so queries like *“operating system”* can return results about *“Linux Mint”* or *“Ubuntu”* even if the words don’t match exactly.
 
 ---
 
-## 2. ⚙️ Workflow Overview
+### 2. ⚙️ Workflow Overview
 1. **Generate embeddings** for your text using a model (e.g., OpenAI, Hugging Face, or local transformer).  
 2. **Store embeddings** in a `vec` column using SQLite‑vec.  
 3. **Query embeddings** with `MATCH` or `ORDER BY distance()` to find semantically similar rows.  
 
 ---
 
-## 3. 🛠️ Example: Articles Table with Embeddings
+### 3. 🛠️ Example: Articles Table with Embeddings
 ```sql
 CREATE VIRTUAL TABLE articles USING vec0(
   id INTEGER PRIMARY KEY,
@@ -892,7 +892,7 @@ VALUES (
 
 ---
 
-## 4. 🔍 Running a Semantic Search
+### 4. 🔍 Running a Semantic Search
 Suppose you want to search for *“how to set up Ubuntu”*.  
 First, generate an embedding for the query text, then run:
 
@@ -908,7 +908,7 @@ LIMIT 5;
 
 ---
 
-## 5. 🧪 Example in Node.js with Prisma
+### 5. 🧪 Example in Node.js with Prisma
 ```js
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
@@ -928,14 +928,14 @@ console.log(results)
 
 ---
 
-## 6. 🌟 Why This Matters
+### 6. 🌟 Why This Matters
 - **Smarter search**: Users find relevant content even if they don’t use the same words.  
 - **Lightweight**: No need for external vector databases — SQLite handles it locally.  
 - **Portable**: Works in embedded apps, desktop software, or small servers.  
 
 ---
 
-## 7. 🚀 Bonus Use Cases
+### 7. 🚀 Bonus Use Cases
 - **FAQ bots**: Match user questions to stored answers.  
 - **Document retrieval**: Search notes, articles, or logs by meaning.  
 - **Recommendation engines**: Suggest similar items based on embeddings.  
