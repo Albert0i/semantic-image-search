@@ -851,3 +851,93 @@ The real trick with SQLite is understanding its **strengths** — portability, s
 SQLite is not just a database engine; it’s a philosophy of simplicity and reliability. Treat it as a trusted companion in your projects, and it will serve you well.
 
 ---
+
+# 🔮 Bonus: Enabling Semantic Search with SQLite‑vec
+
+SQLite‑vec isn’t just about storing embeddings — it unlocks **semantic search** directly inside SQLite. By combining text embeddings with vector similarity queries, you can retrieve results based on meaning rather than exact keywords.
+
+---
+
+## 1. 🧩 What Is Semantic Search?
+Traditional SQL queries match exact strings (`WHERE title LIKE '%linux%'`). Semantic search instead compares **vector embeddings** of text, so queries like *“operating system”* can return results about *“Linux Mint”* or *“Ubuntu”* even if the words don’t match exactly.
+
+---
+
+## 2. ⚙️ Workflow Overview
+1. **Generate embeddings** for your text using a model (e.g., OpenAI, Hugging Face, or local transformer).  
+2. **Store embeddings** in a `vec` column using SQLite‑vec.  
+3. **Query embeddings** with `MATCH` or `ORDER BY distance()` to find semantically similar rows.  
+
+---
+
+## 3. 🛠️ Example: Articles Table with Embeddings
+```sql
+CREATE VIRTUAL TABLE articles USING vec0(
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  content TEXT,
+  embedding FLOAT[1536]  -- assuming OpenAI Ada embeddings
+);
+```
+
+Insert data:
+```sql
+INSERT INTO articles (title, content, embedding)
+VALUES (
+  'Linux Mint Installation Guide',
+  'Step-by-step instructions for installing Linux Mint.',
+  x'...'  -- binary embedding vector
+);
+```
+
+---
+
+## 4. 🔍 Running a Semantic Search
+Suppose you want to search for *“how to set up Ubuntu”*.  
+First, generate an embedding for the query text, then run:
+
+```sql
+SELECT id, title, distance(embedding, :query_embedding) AS score
+FROM articles
+ORDER BY score ASC
+LIMIT 5;
+```
+
+- `:query_embedding` is the vector for your search phrase.  
+- Results are ranked by semantic closeness, not keyword overlap.  
+
+---
+
+## 5. 🧪 Example in Node.js with Prisma
+```js
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
+
+// Assume you generated queryEmbedding with an external model
+const queryEmbedding = Float32Array.from([...])
+
+const results = await prisma.$queryRaw`
+  SELECT id, title, distance(embedding, ${queryEmbedding}) AS score
+  FROM articles
+  ORDER BY score ASC
+  LIMIT 5;
+`
+
+console.log(results)
+```
+
+---
+
+## 6. 🌟 Why This Matters
+- **Smarter search**: Users find relevant content even if they don’t use the same words.  
+- **Lightweight**: No need for external vector databases — SQLite handles it locally.  
+- **Portable**: Works in embedded apps, desktop software, or small servers.  
+
+---
+
+## 7. 🚀 Bonus Use Cases
+- **FAQ bots**: Match user questions to stored answers.  
+- **Document retrieval**: Search notes, articles, or logs by meaning.  
+- **Recommendation engines**: Suggest similar items based on embeddings.  
+
+---
