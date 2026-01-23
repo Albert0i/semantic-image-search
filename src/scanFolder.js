@@ -1,27 +1,15 @@
-/**
- * ┌────────────────────────────────────────────────────────────┐
- * │                                                            │
- * │   Veiltrace: Buffered Folder Scanner                       │
- * │                                                            │
- * │   Crafted by Iong, guided by Albatross (Microsoft Copilot) │
- * │   This scanner walks first, then writes.                   │
- * │   Each image is a breath. Each output, a trace.            │
- * │                                                            │
- * └────────────────────────────────────────────────────────────┘
- */
-
+/*
+   scanFolder.js 
+*/
 import fs from 'fs';
 import path from 'path';
 
-//const IMG_EXTENSIONS = /\.(jpg|jpeg|png|webp|bmp|gif|tiff)$/i;
 const IMG_EXTENSIONS = /\.(jpg|jpeg|png|bmp|gif|tiff)$/i;
-
-const DEFAULT_FOLDER = path.resolve('./img');
+const DEFAULT_FOLDER = path.resolve('./samples');
 const DATA_FOLDER = path.resolve('./data');
 
 const userArgs = process.argv.slice(2);
 const rawPath = userArgs[0];
-const compareDate = userArgs[1] || "1900-01-01"; 
 const targetFolder = rawPath ? path.resolve(rawPath) : DEFAULT_FOLDER;
 const folderName = path.basename(targetFolder);
 const outputFile = path.join(DATA_FOLDER, `${folderName}.lst`);
@@ -43,9 +31,7 @@ function scanDirectory(dir) {
     if (entry.isDirectory()) {
       scanDirectory(fullPath);
     } else if (IMG_EXTENSIONS.test(entry.name)) {
-      const stats = fs.statSync(fullPath);
-      if (stats.birthtime.toISOString() >= compareDate)
-        imagePaths.push(fullPath);
+      imagePaths.push(fullPath);
     }
   }
 }
@@ -80,7 +66,7 @@ function main() {
     fs.mkdirSync(DATA_FOLDER);
   }
 
-  console.log(`🧭 Scanning folder: ${targetFolder}, with creation date >= ${compareDate}`);
+  console.log(`🧭 Scanning folder: ${targetFolder}`);
   scanDirectory(targetFolder);
   writeOutput();
 
