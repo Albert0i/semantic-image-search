@@ -54,7 +54,7 @@ const insertImage = db.prepare(`
   `);
 const checkImageVector = db.prepare(`select rowid from images_vec where rowid = ?;`)
 const insertImageVector = db.prepare(`
-    INSERT INTO images_vec(rowid, embedding) VALUES (?, ?)
+    INSERT INTO images_vec(rowid, embedding) VALUES (?, ?);
   `);
 
 /**
