@@ -1,5 +1,5 @@
 /*
-    Promise-based wrapper
+   sqlite.js
 */
 import 'dotenv/config'
 import Database from 'better-sqlite3';
@@ -100,24 +100,4 @@ export { db, dbPath };
 
    sqlite-vec/examples/simple-node2/demo.mjs
    https://github.com/asg017/sqlite-vec/blob/main/examples/simple-node2/demo.mjs
-*/
-
-/*
-   Classic sqlite3 API 
-*/
-/* 
-import 'dotenv/config';
-import sqlite3 from 'sqlite3';
-import { promisify } from 'util';
-import path from 'path';
-
-const dbPath = process.env.DB_PATH || path.resolve('./data/db.sq3');
-const db = new sqlite3.Database(dbPath);
-
-// Promisified methods
-const dbAll = promisify(db.all).bind(db);
-const dbGet = promisify(db.get).bind(db);
-const dbRun = promisify(db.run).bind(db);
-
-export { dbAll, dbGet, dbRun, dbPath, db };
 */

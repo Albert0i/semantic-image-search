@@ -1,4 +1,4 @@
-// src/oracle-to-sqlite.js
+// oracle-to-sqlite.js
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -7,12 +7,7 @@ async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
 }
 
-// --- Core Transformer (simplified stub for now) ---
-// function transformSql(sql, fileName) {
-//   // TODO: implement full Oracle→SQLite conversion rules
-//   // For now, just return the original SQL
-//   return sql;
-// }
+// --- Core Transformer 
 function transformSql(sql, fileName) {
   // Derive prefixed table name from filename: PH201212.BMBDG.sql.txt → PH201212_BMBDG
   const baseName = path.basename(fileName, path.extname(fileName));
@@ -50,28 +45,6 @@ function transformSql(sql, fileName) {
   }
 
   // Clean only quoted strings inside VALUES(...) lists
-  // function cleanValuesQuotedStrings(stmt) {
-  //   // Split before VALUES to avoid touching table names or column lists
-  //   const m = stmt.match(/\bVALUES\s*\(/i);
-  //   if (!m) return stmt;
-
-  //   const idx = m.index;
-  //   const head = stmt.slice(0, idx);      // INSERT INTO ... (cols) VALUES
-  //   let tail = stmt.slice(idx);           // starting at VALUES(
-
-  //   // Replace quoted strings in tail only
-  //   // tail = tail.replace(/'([^']*)'/g, (m, inner) => {
-  //   //   // Keep ASCII printable and CJK Unified Ideographs; remove others
-  //   //   const cleaned = inner.replace(/[^\x20-\x7E\u4E00-\u9FFF]/g, ' ');
-  //   //   return `'${cleaned}'`;
-  //   // });
-  //   tail = tail.replace(/'([^']*)'/g, (m, inner) => {
-  //     const cleaned = inner.replace(/[^\x20-\x7E\u4E00-\u9FFF]/g, ' ');
-  //     return `'${cleaned}'`;
-  //   });    
-
-  //   return head + tail;
-  // }
   function cleanValuesQuotedStrings(stmt) {
     const m = stmt.match(/\bVALUES\s*\(/i);
     if (!m) return stmt;
@@ -82,10 +55,6 @@ function transformSql(sql, fileName) {
   
     // Allow ASCII printable + all major Chinese ranges
     tail = tail.replace(/'([^']*)'/g, (m, inner) => {
-      // const cleaned = inner.replace(
-      //   /[^\x20-\x7E\u3000-\u303F\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF\u20000-\u2A6DF]/g,
-      //   ' '
-      // );      
       // strip control characters (non‑printable), leaving all Unicode intact
       const cleaned = inner.replace(/[\x00-\x1F\x7F]/g, ' ');
       return `'${cleaned}'`;
@@ -122,8 +91,8 @@ function transformSql(sql, fileName) {
     // 4) INSERT
     if (/^INSERT\s+INTO\b/i.test(stmt)) {
       // Replace only the table name token after INSERT INTO
-      //stmt = stmt.replace(/^(INSERT\s+INTO\s+)(\S+)/i, (_, pfx) => `${pfx}${tableName}`);
       stmt = stmt.replace(/^(INSERT\s+INTO\s+)(\S+)/i, (_, __, tbl) => `INSERT INTO ${tableName.replace('_sql', '')}`);
+
       // Clean quoted strings only in VALUES(...) part
       stmt = cleanValuesQuotedStrings(stmt);
       output.push(stmt + ';');
@@ -160,7 +129,7 @@ async function processFolder(inputDir, outputDir) {
 
       await ensureDir(path.dirname(outPath));
       const baseName = path.basename(outPath, path.extname(outPath));
-      //const outFile = path.join(path.dirname(outPath), baseName + '.sqlite.sql');
+      
       const outFile = path.join(path.dirname(outPath), baseName);
 
       await fs.writeFile(outFile, finalSql, 'utf8');

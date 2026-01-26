@@ -14,12 +14,9 @@ const DATA_FOLDER = path.resolve('./data');
 const userArgs = process.argv.slice(2);
 const rawPath = userArgs[0];
 const targetFolder = rawPath ? path.resolve(rawPath) : DEFAULT_FOLDER;
-const folderName = path.basename(targetFolder);
-const outputFile = path.join(DATA_FOLDER, `${folderName}.lst`);
 
 let folderCount = 0;
 let imageCount = 0;
-const imagePaths = []; // Buffer for image paths
 
 /**
  * Recursively walks through folders and buffers image paths
@@ -36,14 +33,23 @@ function scanDirectory(dir) {
     } else if (IMG_EXTENSIONS.test(entry.name)) {
       imageCount++; 
       insertDatabase(fullPath)
-      // imagePaths.push(fullPath);      
-      // const stat = fs.lstatSync(fullPath);
-      // console.log('stat = ', stat)
-
     }
   }
 }
 
+// Prepare insert statement 
+const insertImage = db.prepare(`
+  INSERT INTO images (fileName, fullPath, fileFormat, fileSize, hash, 
+                      indexedAt, createdAt, modifiedAt, updateIdent)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+         `);
+const insertImageVector = db.prepare(`
+    INSERT INTO images_vec(rowid, embedding) VALUES (?, ?)
+  `);
+
+/**
+ * Insert image data to database
+ */
 function insertDatabase(filePath) {
     const stat = fs.statSync(filePath);
     const now = new Date();
@@ -56,51 +62,23 @@ function insertDatabase(filePath) {
     const modifiedAt = stat.mtime.toISOString();
     const hash = sha256FileSync(filePath)
         
-    // 🧾 Prepare insert statement 
-    const insert = db.prepare(`INSERT INTO images (fileName, fullPath, fileFormat, fileSize, hash, 
-                                     indexedAt, createdAt, modifiedAt, updateIdent)
-                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-    const insertStmt = db.prepare("INSERT INTO images_vec(rowid, embedding) VALUES (?, ?)");
-
-    // getImageEmbeds(filePath).then(embedding => {
-    //   console.log('embedding = ', embedding.data)
-    //   insert.run(fileName, filePath, fileFormat, fileSize, embedding.data, 
-    //              hash, indexedAt, createdAt, modifiedAt, 0)
-    // }).catch(error => {
-    //   console.log(error)
-    // })
-    const result = insert.run(fileName, filePath, fileFormat, fileSize, hash, indexedAt, createdAt, modifiedAt, 0)
+    const result = insertImage.run(fileName, filePath, fileFormat, fileSize, hash, 
+                                   indexedAt, createdAt, modifiedAt, 0)
     const id = result.lastInsertRowid
-    //console.log('result = ', result)
+    
     getImageEmbeds(filePath).then(embedding => {
-          console.log('embedding = ', embedding.data)
-          insertStmt.run(BigInt(id), new Uint8Array(new Float32Array(embedding.data).buffer));
+          //console.log('embedding = ', embedding.data)
+          process.stdout.write('.');
+          insertImageVector.run(BigInt(id), new Uint8Array(new Float32Array(embedding.data).buffer));
         }).catch(error => {
           console.log(error)
         })
 }
 
 /**
- * Writes buffered image paths to output file
- */
-function writeOutput() {
-  const outputStream = fs.createWriteStream(outputFile, { flags: 'w' });
-
-  for (const fullPath of imagePaths) {
-    const normalizedPath = fullPath.replace(/\\/g, '/');
-    outputStream.write(normalizedPath + '\n');
-    //imageCount++;
-  }
-
-  outputStream.end();
-}
-
-/**
  * Main entry point
  */
 async function main() {
-  const startTime = Date.now();
-
   if (!fs.existsSync(targetFolder)) {
     console.error(`[ERROR] Folder not found: ${targetFolder}`);
     process.exit(1);
@@ -112,41 +90,11 @@ async function main() {
 
   console.log(`🧭 Scanning folder: ${targetFolder}`);
   scanDirectory(targetFolder);
-  //writeOutput();
-
-  const durationSec = ((Date.now() - startTime) / 1000).toFixed(2);
+  
   console.log(`✅ Scan complete: ${imageCount} images found in ${folderCount} folders`);
-  //console.log(`📄 List saved to: ${outputFile}`);
-  console.log(`⏱️ Time spent: ${durationSec} seconds`);
 }
 
 /*
    main
 */
 main();
-
-/*
-CREATE TABLE images (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    fileName VARCHAR(255) NOT NULL,
-    fullPath VARCHAR(255) NOT NULL,
-    fileFormat VARCHAR(16) NOT NULL,
-    fileSize INTEGER NOT NULL,      
-    hash CHAR(64) NOT NULL,
-    indexedAt VARCHAR(24) NOT NULL,
-    createdAt VARCHAR(24) NOT NULL,
-    modifiedAt VARCHAR(24) NOT NULL,
-    updateIdent INTEGER NOT NULL DEFAULT 0,
-    UNIQUE(fullPath)
-);
-
-CREATE VIRTUAL TABLE images_vec USING vec0 (
-    embedding float[768],
-);
-
-SELECT rowid, distance
-FROM images_vec 
-WHERE embedding MATCH (select embedding from images_vec where rowid=400)
-ORDER BY distance
-LIMIT 3; 
-*/
