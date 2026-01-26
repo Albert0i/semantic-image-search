@@ -69,6 +69,8 @@ const items = [
          `)
       .all(new Uint8Array(new Float32Array(query).buffer));
    
+      db.exec(`drop table vec_items;`)
+      db.exec(`vacuum;`)
    console.log(rows);
  } catch (err) {
    console.log(err.message)

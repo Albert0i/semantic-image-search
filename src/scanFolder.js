@@ -38,11 +38,21 @@ function scanDirectory(dir) {
 }
 
 // Prepare insert statement 
+// const insertImage = db.prepare(`
+//   INSERT INTO images (fileName, fullPath, fileFormat, fileSize, hash, 
+//                       indexedAt, createdAt, modifiedAt, updateIdent)
+//          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+//          `);
 const insertImage = db.prepare(`
   INSERT INTO images (fileName, fullPath, fileFormat, fileSize, hash, 
                       indexedAt, createdAt, modifiedAt, updateIdent)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-         `);
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(fullPath) DO UPDATE SET
+          indexedAt = excluded.indexedAt,
+          updateIdent = updateIdent + 1
+        RETURNING rowid, updateIdent;
+  `);
+const checkImageVector = db.prepare(`select rowid from images_vec where rowid = ?;`)
 const insertImageVector = db.prepare(`
     INSERT INTO images_vec(rowid, embedding) VALUES (?, ?)
   `);
@@ -62,17 +72,24 @@ function insertDatabase(filePath) {
     const modifiedAt = stat.mtime.toISOString();
     const hash = sha256FileSync(filePath)
         
-    const result = insertImage.run(fileName, filePath, fileFormat, fileSize, hash, 
+    // { id, updateIdent }
+    const { id } = insertImage.get(fileName, filePath, fileFormat, fileSize, hash, 
                                    indexedAt, createdAt, modifiedAt, 0)
-    const id = result.lastInsertRowid
-    
-    getImageEmbeds(filePath).then(embedding => {
-          //console.log('embedding = ', embedding.data)
-          process.stdout.write('.');
-          insertImageVector.run(BigInt(id), new Uint8Array(new Float32Array(embedding.data).buffer));
-        }).catch(error => {
-          console.log(error)
-        })
+
+    // Either { rowid } or "undefined"
+    const row = checkImageVector.get(id)
+
+    // If image vector not exists...
+    if (typeof row === "undefined") {
+      getImageEmbeds(filePath).then(embedding => {
+        //console.log('embedding = ', embedding.data)        
+        insertImageVector.run(BigInt(id), 
+                              new Uint8Array(new Float32Array(embedding.data).buffer));
+        console.log(`✅ Processed: ${filePath}`);
+      }).catch(error => {
+        console.log(error)
+      })
+    }
 }
 
 /**
