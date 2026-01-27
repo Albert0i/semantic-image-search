@@ -5,6 +5,7 @@ console.log(db.exec(`
     CREATE TABLE images (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         fileName VARCHAR(255) NOT NULL,
+        title TEXT NOT NULL DEFAULT '', 
         fullPath VARCHAR(255) NOT NULL,
         fileFormat VARCHAR(16) NOT NULL,
         fileSize INTEGER NOT NULL,      

@@ -8,8 +8,9 @@
     "build:css": "postcss ./src/public/styles/styles.css -o ./src/public/styles/build.css --watch",
     "dev": "concurrently \"npm:build:css\" \"npm:start\"",
     "sql": "sqlite3 -init initvec.sql ./data/samples.db",
+    "create": "node src/createTables.js",
     "scan": "node src/scanFolder.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node src/testVector.js 2> null"
   },
   "keywords": [],
   "author": "",

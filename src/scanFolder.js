@@ -6,6 +6,7 @@ import path from 'path';
 import { db } from './utils/sqlite.js'
 import { sha256FileSync } from './utils/utils.js'
 import { getImageEmbeds } from './utils/embedder.js'
+import { getImageCaption } from './utils/captioner.js'
 
 const IMG_EXTENSIONS = /\.(jpg|jpeg|png|bmp|gif|tiff)$/i;
 const DEFAULT_FOLDER = path.resolve('./samples');
@@ -52,6 +53,9 @@ const insertImage = db.prepare(`
           updateIdent = updateIdent + 1
         RETURNING rowid, updateIdent;
   `);
+const updateImageTitle = db.prepare(`
+  UPDATE images set title=? where id=?;
+  `)
 const checkImageVector = db.prepare(`select rowid from images_vec where rowid = ?;`)
 const insertImageVector = db.prepare(`
     INSERT INTO images_vec(rowid, embedding) VALUES (?, ?);
@@ -76,13 +80,20 @@ function insertDatabase(filePath) {
     const { id } = insertImage.get(fileName, filePath, fileFormat, fileSize, hash, 
                                    indexedAt, createdAt, modifiedAt, 0)
 
+    getImageCaption(filePath).then(output => { 
+      //console.log('generated_text = ', output[0].generated_text) 
+      updateImageTitle.run(output[0].generated_text, id)
+    }).catch(error => {
+      console.log(error)
+    })
+
     // Either { rowid } or "undefined"
     const row = checkImageVector.get(id)
 
     // If image vector not exists...
     if (typeof row === "undefined") {
       getImageEmbeds(filePath).then(embedding => {
-        //console.log('embedding = ', embedding.data)        
+        //console.log('embedding = ', embedding.data) 
         insertImageVector.run(BigInt(id), 
                               new Uint8Array(new Float32Array(embedding.data).buffer));
         console.log(`✅ Processed: ${filePath}`);

@@ -1,4 +1,5 @@
 import { getTextEmbeds, getImageEmbeds } from './utils/embedder.js'
+import { getImageCaption } from './utils/captioner.js'
 
 /*
    Embedding from text. 
@@ -15,6 +16,9 @@ const image_url = "./img/cat.jpg"
 const image_embeds = await getImageEmbeds(image_url)
 
 console.log('image_embeds =', image_embeds)
+
+const image_caption = await getImageCaption(image_url)
+console.log('image_caption =', image_caption)
 
 /*
    huggingface/transformers.js
