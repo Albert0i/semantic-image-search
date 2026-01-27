@@ -1,4 +1,4 @@
-import { db } from './sqlite.js'
+import { db } from './utils/sqlite.js'
 
 console.log(db.exec(`
     DROP TABLE IF EXISTS images;

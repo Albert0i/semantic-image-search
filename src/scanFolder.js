@@ -3,9 +3,9 @@
 */
 import fs from 'fs';
 import path from 'path';
-import { db } from './sqlite.js'
-import { sha256FileSync } from './utils.js'
-import { getImageEmbeds } from './embedder.js'
+import { db } from './utils/sqlite.js'
+import { sha256FileSync } from './utils/utils.js'
+import { getImageEmbeds } from './utils/embedder.js'
 
 const IMG_EXTENSIONS = /\.(jpg|jpeg|png|bmp|gif|tiff)$/i;
 const DEFAULT_FOLDER = path.resolve('./samples');

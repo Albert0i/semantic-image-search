@@ -1,6 +1,6 @@
 // routes/api.js
 import express from 'express';
-import { db } from '../sqlite.js'
+import { db } from '../utils/sqlite.js'
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
