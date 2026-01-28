@@ -23,7 +23,7 @@
   <div id="imageDetails" class="hidden w-full max-w-4xl p-6 bg-white rounded shadow"></div>
 
   <!-- Footer -->
-  <footer class="mt-12 text-sm text-gray-500">
+  <footer class="mt-12 text-sm text-gray-700">
     Powered by 
     <a href="https://www.sqlite.org/" class="text-blue-500 hover:underline" target="_blank">SQLite</a> 
     and 
@@ -44,7 +44,10 @@
         const info = await infoRes.json();
 
         // Update title
-        document.getElementById('imageTitle').textContent = capitalizeFirstLetter(info.title);
+        document.getElementById('imageTitle').textContent = capitalizeFirstLetter(info.title) + '.';
+
+        // Convert bytes to KB (rounded to 2 decimals)
+        const sizeKB = (info.fileSize / 1024).toFixed(2);
 
         // Show details
         const details = document.getElementById('imageDetails');
@@ -53,7 +56,7 @@
           <p><strong>File Name:</strong> ${info.fileName}</p>
           <p><strong>Full Path:</strong> ${info.fullPath}</p>
           <p><strong>Format:</strong> ${info.fileFormat}</p>
-          <p><strong>Size:</strong> ${info.fileSize} bytes</p>
+          <p><strong>Size:</strong> ${sizeKB} KB</p>
           <p><strong>Indexed At:</strong> ${info.indexedAt}</p>
           <p><strong>Created At:</strong> ${info.createdAt}</p>
           <p><strong>Modified At:</strong> ${info.modifiedAt}</p>          
