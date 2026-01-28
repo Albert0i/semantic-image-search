@@ -4,7 +4,7 @@
 import fs from 'fs';
 import path from 'path';
 import { db } from './utils/sqlite.js'
-import { sha256FileSync } from './utils/utils.js'
+import { sha256FileSync, normalizeVector } from './utils/utils.js'
 import { getImageEmbeds } from './utils/embedder.js'
 import { getImageCaption } from './utils/captioner.js'
 
@@ -94,8 +94,12 @@ function insertDatabase(filePath) {
     if (typeof row === "undefined") {
       getImageEmbeds(filePath).then(embedding => {
         //console.log('embedding = ', embedding.data) 
+        // insertImageVector.run(BigInt(id), 
+        //                       new Uint8Array(new Float32Array(embedding.data).buffer));
+
         insertImageVector.run(BigInt(id), 
-                              new Uint8Array(new Float32Array(embedding.data).buffer));
+        new Uint8Array(new Float32Array(normalizeVector(embedding.data)).buffer));
+
         console.log(`✅ Processed: ${filePath}`);
       }).catch(error => {
         console.log(error)

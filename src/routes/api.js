@@ -122,8 +122,12 @@ router.post('/search', async (req, res) => {
       return res.status(400).json({ error: 'Missing query' });
     }
     
-    const queryVector = await getTextEmbeds(query)
-    const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(queryVector.data).buffer), 20)
+    const text_embeds = await getTextEmbeds(query)
+    console.log('text_embeds =', text_embeds)
+    const query_embedding = text_embeds.tolist()[0];
+    // const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(query_embedding).buffer), 20)
+    console.log('query_embedding =', query_embedding)
+    const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(query_embedding).buffer), 20)
 
     res.json(rows);
   } catch (err) {
@@ -133,5 +137,5 @@ router.post('/search', async (req, res) => {
 
 export default router;
 /*
-curl -X POST http://localhost:3000/api/v1/search -H "Content-Type: application/json" -d "{\"query\":\"building\"}" | jq 
+curl -X POST http://localhost:3000/api/v1/search -H "Content-Type: application/json" -d "{\"query\":\"cat\"}" | jq 
 */

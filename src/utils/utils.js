@@ -9,75 +9,89 @@ export function sha256FileSync(path) {
   return hash.digest('hex');               // return hex string
 }
 
+export function normalizeVector(vec) {
+  const norm = Math.sqrt(vec.reduce((sum, v) => sum + v * v, 0));
+  if (norm === 0) return vec; // avoid division by zero
+  return vec.map(v => v / norm);
+}
 
-// All used SQLs
-export const SQL_create_table = `
-    DROP TABLE IF EXISTS images;
-    CREATE TABLE images (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      fileName VARCHAR(255) NOT NULL,
-      fullPath VARCHAR(255) NOT NULL,
-      fileFormat VARCHAR(16) NOT NULL,
-      fileSize INTEGER NOT NULL,      
-      hash CHAR(64) NOT NULL,
-      embedding float[768] NOT NULL, 
-      indexedAt VARCHAR(24) NOT NULL,
-      createdAt VARCHAR(24) NOT NULL,
-      modifiedAt VARCHAR(24) NOT NULL,
-      updateIdent INTEGER NOT NULL DEFAULT 0,
-      UNIQUE(fullPath)
-    );
+// 3D vector
+//console.log(normalizeVector([3, 4, 0]));
+// → [0.6, 0.8, 0]
 
-    DROP TABLE IF EXISTS audit;
-    CREATE TABLE audit (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      auditKey   VARCHAR(128) NOT NULL,
-      auditValue VARCHAR(128) NOT NULL,
-      updateIdent INTEGER NOT NULL DEFAULT 0,
-      UNIQUE(auditKey)
-    );
-    VACUUM;
-  `;
+// 512D vector (CLIP embedding)
+//const embedding512 = Array(512).fill(0.5); // example
+//console.log(normalizeVector(embedding512).length);
+// → 512 (normalized)
 
-export const SQL_insert = `
-    INSERT INTO files (fileName, fullPath, fileFormat, fileSize, isTextFile, 
-                       content, hash, indexedAt, createdAt, modifiedAt)
-    VALUES (?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?)
-  `;
+// // All used SQLs
+// export const SQL_create_table = `
+//     DROP TABLE IF EXISTS images;
+//     CREATE TABLE images (
+//       id INTEGER PRIMARY KEY AUTOINCREMENT,
+//       fileName VARCHAR(255) NOT NULL,
+//       fullPath VARCHAR(255) NOT NULL,
+//       fileFormat VARCHAR(16) NOT NULL,
+//       fileSize INTEGER NOT NULL,      
+//       hash CHAR(64) NOT NULL,
+//       embedding float[768] NOT NULL, 
+//       indexedAt VARCHAR(24) NOT NULL,
+//       createdAt VARCHAR(24) NOT NULL,
+//       modifiedAt VARCHAR(24) NOT NULL,
+//       updateIdent INTEGER NOT NULL DEFAULT 0,
+//       UNIQUE(fullPath)
+//     );
 
-export const SQL_update = `
-    UPDATE files SET updateIdent = updateIdent + 1 WHERE fullPath = ?
-  `;
+//     DROP TABLE IF EXISTS audit;
+//     CREATE TABLE audit (
+//       id INTEGER PRIMARY KEY AUTOINCREMENT,
+//       auditKey   VARCHAR(128) NOT NULL,
+//       auditValue VARCHAR(128) NOT NULL,
+//       updateIdent INTEGER NOT NULL DEFAULT 0,
+//       UNIQUE(auditKey)
+//     );
+//     VACUUM;
+//   `;
 
-export const SQL_create_table_fs = `
-    DROP TABLE IF EXISTS files_fts;
-    CREATE VIRTUAL TABLE files_fts USING fts5(
-      content,
-      content='files',
-      content_rowid='id'
-    );
+// export const SQL_insert = `
+//     INSERT INTO files (fileName, fullPath, fileFormat, fileSize, isTextFile, 
+//                        content, hash, indexedAt, createdAt, modifiedAt)
+//     VALUES (?, ?, ?, ?, ?, 
+//             ?, ?, ?, ?, ?)
+//   `;
 
-    INSERT INTO files_fts(rowid, content)
-    SELECT id, content FROM files WHERE isTextFile = 1;
+// export const SQL_update = `
+//     UPDATE files SET updateIdent = updateIdent + 1 WHERE fullPath = ?
+//   `;
 
-    CREATE TRIGGER files_ai AFTER INSERT ON files
-    WHEN new.isTextFile = 1
-    BEGIN
-      INSERT INTO files_fts(rowid, content) VALUES (new.id, new.content);
-    END;
+// export const SQL_create_table_fs = `
+//     DROP TABLE IF EXISTS files_fts;
+//     CREATE VIRTUAL TABLE files_fts USING fts5(
+//       content,
+//       content='files',
+//       content_rowid='id'
+//     );
 
-    CREATE TRIGGER files_au AFTER UPDATE ON files
-    WHEN new.isTextFile = 1
-    BEGIN
-      UPDATE files_fts SET content = new.content WHERE rowid = new.id;
-    END;
+//     INSERT INTO files_fts(rowid, content)
+//     SELECT id, content FROM files WHERE isTextFile = 1;
 
-    CREATE TRIGGER files_ad AFTER DELETE ON files
-    BEGIN
-      DELETE FROM files_fts WHERE rowid = old.id;
-    END;
-`
+//     CREATE TRIGGER files_ai AFTER INSERT ON files
+//     WHEN new.isTextFile = 1
+//     BEGIN
+//       INSERT INTO files_fts(rowid, content) VALUES (new.id, new.content);
+//     END;
+
+//     CREATE TRIGGER files_au AFTER UPDATE ON files
+//     WHEN new.isTextFile = 1
+//     BEGIN
+//       UPDATE files_fts SET content = new.content WHERE rowid = new.id;
+//     END;
+
+//     CREATE TRIGGER files_ad AFTER DELETE ON files
+//     BEGIN
+//       DELETE FROM files_fts WHERE rowid = old.id;
+//     END;
+// `
 
 // export function writeAudit(db, key, value, flush = true) {
 //   const sql = `
