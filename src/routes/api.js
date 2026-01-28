@@ -1,6 +1,7 @@
-// routes/api.js
+// api.js
 import express from 'express';
 import { db } from '../utils/sqlite.js'
+import { getTextEmbeds } from '../utils/embedder.js'
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
@@ -17,9 +18,17 @@ const mimeTypes = {
   tiff: 'image/tiff'
 };
 
+// Prepare all SQL statements 
 const stmtImages = db.prepare('SELECT * FROM images WHERE id = ?');
 const stmtImagesFullPath = db.prepare('SELECT fullPath FROM images WHERE id = ?');
 const stmtImagesVec = db.prepare('SELECT * FROM images_vec WHERE rowid = ?');
+const stmtImagesQuery = db.prepare(`
+                          SELECT rowid, distance
+                          FROM images_vec
+                          WHERE embedding MATCH ?
+                          ORDER BY distance
+                          LIMIT ?;
+      `)
 
 // GET /info/:id
 router.get('/info/:id', (req, res) => {
@@ -105,20 +114,16 @@ router.get('/image/:id', (req, res) => {
     }
   });  
 
-// POST /api/v1/search
-router.post('/search', express.json(), (req, res) => {
+// POST /search
+router.post('/search', async (req, res) => {
   try {
     const { query } = req.body;
     if (!query) {
       return res.status(400).json({ error: 'Missing query' });
     }
-
-    // Example: naive search by filename or hash
-    const stmt = db.prepare(`
-      SELECT * FROM images
-      WHERE fileName LIKE ? OR hash LIKE ?
-    `);
-    const rows = stmt.all(`%${query}%`, `%${query}%`);
+    
+    const queryVector = await getTextEmbeds(query)
+    const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(queryVector.data).buffer), 20)
 
     res.json(rows);
   } catch (err) {
@@ -127,3 +132,6 @@ router.post('/search', express.json(), (req, res) => {
 });
 
 export default router;
+/*
+curl -X POST http://localhost:3000/api/v1/search -H "Content-Type: application/json" -d "{\"query\":\"building\"}" | jq 
+*/

@@ -9,7 +9,7 @@
     "dev": "concurrently \"npm:build:css\" \"npm:start\"",
     "sql": "sqlite3 -init initvec.sql ./data/samples.db",
     "create": "node src/createTables.js",
-    "scan": "node src/scanFolder.js",
+    "scan": "node src/scanFolder.js 2> null",
     "test": "node src/testVector.js 2> null"
   },
   "keywords": [],
