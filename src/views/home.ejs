@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Semantic Image Search</title>
+  <link rel="stylesheet" href="/styles/build.css">
+</head>
+<body class="flex flex-col items-center min-h-screen p-8 bg-gray-100">
+
+  <!-- Title & Subtitle -->
+  <h1 class="mb-2 text-3xl font-bold">Semantic Image Search</h1>
+  <p class="mb-6 text-gray-600">Search images by text description</p>
+
+  <!-- Search Form -->
+  <form id="searchForm" class="flex mb-8 space-x-2">
+    <input id="query" name="query" type="text" required
+      placeholder="Enter text..."
+      class="px-4 py-2 border rounded w-80 focus:outline-none focus:ring-2 focus:ring-blue-400" autofocus">
+    <button type="submit"
+      class="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+      Search
+    </button>
+  </form>
+
+  <!-- Results Grid -->
+  <div id="results" class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <% if (results) { %>
+      <% results.forEach(({ rowid, distance }) => { %>
+        <div class="overflow-hidden bg-white rounded shadow">
+          <div class="p-2 font-bold text-center">
+            distance: <%= distance.toFixed(4) %>
+          </div>
+          <a href="/image/<%= rowid %>" target="_blank">
+            <img src="/api/v1/preview/<%= rowid %>"
+                 alt="Image <%= rowid %>"
+                 class="object-cover w-full h-64 transition hover:opacity-80">
+          </a>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <!-- Client-side fetch -->
+  <script type="module">
+    const form = document.getElementById('searchForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = document.getElementById('query').value;
+      const res = await fetch('/api/v1/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+      const data = await res.json();
+
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      data.forEach(({ rowid, distance }) => {
+        const card = document.createElement('div');
+        card.className = 'bg-white shadow rounded overflow-hidden';
+        card.innerHTML = `
+          <div class="p-2 font-bold text-center">
+            Distance: ${distance.toFixed(3)}
+          </div>
+          <a href="/image/${rowid}" target="_blank">
+            <img src="/images/${rowid}.jpg"
+                 alt="Image ${rowid}"
+                 class="object-cover w-full h-64 transition hover:opacity-80">
+          </a>
+        `;
+        resultsDiv.appendChild(card);
+      });
+    });
+  </script>
+
+</body>
+</html>

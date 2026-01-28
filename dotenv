@@ -11,3 +11,6 @@ MODEL_ID=Xenova/clip-vit-base-patch16
 
 # SQLite DB path
 DB_PATH='./data/samples.db'
+
+# Server port 
+PORT=3000

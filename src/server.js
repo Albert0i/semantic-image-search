@@ -1,11 +1,15 @@
+// Import environment variables 
+import 'dotenv/config'
 // Import the express library to create and manage the server
 import express from "express";
 // Import the path module for handling file paths
 import path from "path";
 // Import the fileURLToPath function to convert file URLs to paths
 import { fileURLToPath } from "url";
+// Import the home route
+import homeRoute from './routes/home.js'; // adjust path if needed
 // Import the API route
-import apiRoutes from './routes/api.js'; // adjust path if needed
+import apiRoute from './routes/api.js'; // adjust path if needed
 
 // Get the current filename and directory
 const __filename = fileURLToPath(import.meta.url);
@@ -27,23 +31,15 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Serve static files (like CSS, images, and client-side JavaScript) from the 'public' directory
-// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
 
-// Define a route for the root URL ("/")
-app.get("/", (req, res) => {
-    // Render the 'index' view (index.ejs) and pass in some data
-    res.render("index", {
-        title: "Tracker App",
-        message: "Welcome to your Tailwind-powered tracker!",
-    });
-});
-
 // Start the server and listen for incoming requests
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Mount all API routes under /api/v1
-app.use('/api/v1', apiRoutes);
+// Mount home route under /
+app.use('/', homeRoute);
+// Mount all API route under /api/v1
+app.use('/api/v1', apiRoute);
 
 // Start the server and listen for incoming requests
 app.listen(port, () => {
