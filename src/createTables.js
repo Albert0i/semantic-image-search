@@ -20,7 +20,7 @@ console.log(db.exec(`
 console.log(db.exec(`
     DROP TABLE IF EXISTS images_vec;
     CREATE VIRTUAL TABLE images_vec USING vec0 (
-        embedding float[768]
+        embedding float[512]
     );`))
 
 console.log(db.exec('vacuum;'))

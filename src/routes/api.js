@@ -20,14 +20,18 @@ const mimeTypes = {
 };
 
 // Prepare all SQL statements 
-const stmtImages = db.prepare('SELECT * FROM images WHERE id = ?');
+const stmtImages = db.prepare(`
+                          SELECT f1.*, vec_length(f2.embedding) as vec_length 
+                          FROM images f1, images_vec f2 
+                          WHERE f1.id = f2.rowid AND id = ?`
+                        );
 const stmtImagesFullPath = db.prepare('SELECT fullPath FROM images WHERE id = ?');
 const stmtImagesVec = db.prepare('SELECT * FROM images_vec WHERE rowid = ?');
 const stmtImagesQuery = db.prepare(`
                           SELECT rowid, distance
                           FROM images_vec
                           WHERE embedding MATCH ?
-                          ORDER BY distance
+                          ORDER BY distance ASC
                           LIMIT ?;
       `)
 
@@ -126,7 +130,7 @@ router.post('/search', async (req, res) => {
     const text_embeds = await getTextEmbeds(query)
     const query_embedding = normalizeVector(text_embeds.tolist()[0]);
     
-    const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(query_embedding).buffer), 20)
+    const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(query_embedding).buffer), 10)
 
     res.json(rows);
   } catch (err) {
