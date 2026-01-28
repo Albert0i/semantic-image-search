@@ -39,11 +39,6 @@ function scanDirectory(dir) {
 }
 
 // Prepare insert statement 
-// const insertImage = db.prepare(`
-//   INSERT INTO images (fileName, fullPath, fileFormat, fileSize, hash, 
-//                       indexedAt, createdAt, modifiedAt, updateIdent)
-//          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-//          `);
 const insertImage = db.prepare(`
   INSERT INTO images (fileName, fullPath, fileFormat, fileSize, hash, 
                       indexedAt, createdAt, modifiedAt, updateIdent)
@@ -94,8 +89,6 @@ function insertDatabase(filePath) {
     if (typeof row === "undefined") {
       getImageEmbeds(filePath).then(embedding => {
         //console.log('embedding = ', embedding.data) 
-        // insertImageVector.run(BigInt(id), 
-        //                       new Uint8Array(new Float32Array(embedding.data).buffer));
 
         insertImageVector.run(BigInt(id), 
         new Uint8Array(new Float32Array(normalizeVector(embedding.data)).buffer));

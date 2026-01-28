@@ -2,6 +2,7 @@
 import express from 'express';
 import { db } from '../utils/sqlite.js'
 import { getTextEmbeds } from '../utils/embedder.js'
+import { normalizeVector } from '../utils/utils.js'
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
@@ -123,10 +124,8 @@ router.post('/search', async (req, res) => {
     }
     
     const text_embeds = await getTextEmbeds(query)
-    console.log('text_embeds =', text_embeds)
-    const query_embedding = text_embeds.tolist()[0];
-    // const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(query_embedding).buffer), 20)
-    console.log('query_embedding =', query_embedding)
+    const query_embedding = normalizeVector(text_embeds.tolist()[0]);
+    
     const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(query_embedding).buffer), 20)
 
     res.json(rows);
