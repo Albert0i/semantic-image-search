@@ -7,9 +7,9 @@ can be entirely fulfilled.* "<br /><br />"Todo esforço, qualquer que seja o fim
 
 
 #### Prologue
-In the year of 2026, when "[AI slop](https://techcrunch.com/2026/01/05/microsofts-nadella-wants-us-to-stop-thinking-of-ai-as-slop/)" and "[Microslop](https://cybernews.com/ai-news/microsoft-ai-microslop-copilot/?utm_source=cn_facebook&utm_medium=social&utm_campaign=cybernews&utm_content=post&source=cn_facebook&medium=social&campaign=cybernews&content=post)" become internet buzzwords, these impose introspection to what AI can do good for human being. While most AI concept *stagnate* on fancystage, the very technique that prevails is *AI features* like  **semantic search**. 
+In the year of 2026, when "[AI slop](https://techcrunch.com/2026/01/05/microsofts-nadella-wants-us-to-stop-thinking-of-ai-as-slop/)" and "[Microslop](https://cybernews.com/ai-news/microsoft-ai-microslop-copilot/?utm_source=cn_facebook&utm_medium=social&utm_campaign=cybernews&utm_content=post&source=cn_facebook&medium=social&campaign=cybernews&content=post)" become internet buzzwords, all these impose introspection to what AI can do for human being. While most AI concept *stagnate* on fancy stage, the technique that prevails is *AI features* like  **semantic search**. 
 
-I have to reinstate that all tools invented should help and thus facilitate human life; not monitor, spy and surveillance purpose.  
+ALL tools invented should help and facilitate human life; not monitor and spy on human. 
 
 
 #### I. 
