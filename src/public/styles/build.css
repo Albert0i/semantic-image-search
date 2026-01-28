@@ -249,9 +249,6 @@
   .max-w-md {
     max-width: var(--container-md);
   }
-  .max-w-xl {
-    max-width: var(--container-xl);
-  }
   .flex-shrink {
     flex-shrink: 1;
   }
@@ -370,9 +367,6 @@
   }
   .text-blue-500 {
     color: var(--color-blue-500);
-  }
-  .text-gray-500 {
-    color: var(--color-gray-500);
   }
   .text-gray-600 {
     color: var(--color-gray-600);
