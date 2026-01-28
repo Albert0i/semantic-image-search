@@ -15,7 +15,7 @@
   <form id="searchForm" class="flex mb-8 space-x-2">
     <input id="query" name="query" type="text" required
       placeholder="Enter text..."
-      class="px-4 py-2 border rounded w-80 focus:outline-none focus:ring-2 focus:ring-blue-400" autofocus">
+      class="px-4 py-2 border rounded w-80 focus:outline-none focus:ring-2 focus:ring-blue-400" autoFocus>
     <button type="submit"
       class="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
       Search
@@ -23,21 +23,7 @@
   </form>
 
   <!-- Results Grid -->
-  <div id="results" class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-    <% if (results) { %>
-      <% results.forEach(({ rowid, distance }) => { %>
-        <div class="overflow-hidden bg-white rounded shadow">
-          <div class="p-2 font-bold text-center">
-            distance: <%= distance.toFixed(4) %>
-          </div>
-          <a href="/image/<%= rowid %>" target="_blank">
-            <img src="/api/v1/preview/<%= rowid %>"
-                 alt="Image <%= rowid %>"
-                 class="object-cover w-full h-64 transition hover:opacity-80">
-          </a>
-        </div>
-      <% }) %>
-    <% } %>
+  <div id="results" class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">    
   </div>
 
   <!-- Client-side fetch -->
@@ -60,10 +46,10 @@
         card.className = 'bg-white shadow rounded overflow-hidden';
         card.innerHTML = `
           <div class="p-2 font-bold text-center">
-            Distance: ${distance.toFixed(3)}
+            distance: ${distance.toFixed(4)}
           </div>
           <a href="/image/${rowid}" target="_blank">
-            <img src="/images/${rowid}.jpg"
+            <img src="/api/v1/preview/${rowid}"
                  alt="Image ${rowid}"
                  class="object-cover w-full h-64 transition hover:opacity-80">
           </a>
