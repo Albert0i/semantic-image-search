@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Detail</title>
+  <link rel="stylesheet" href="/styles/build.css">
+</head>
+<body class="flex flex-col items-center min-h-screen p-8 bg-gray-100">
+
+  <!-- Hidden ID -->
+  <input type="hidden" id="imageId" value="<%= id %>">
+
+  <!-- Title -->
+  <h1 id="imageTitle" class="mb-4 text-2xl font-bold">Loading...</h1>  
+
+  <!-- Image (full size) -->
+  <img id="imageDisplay"
+       src="/api/v1/image/<%= id %>"
+       alt="Image <%= id %>"
+       class="w-full mb-6 rounded shadow">
+
+  <!-- Details -->
+  <div id="imageDetails" class="hidden w-full max-w-4xl p-6 bg-white rounded shadow"></div>
+
+  <!-- Footer -->
+  <footer class="mt-12 text-sm text-gray-500">
+    Powered by 
+    <a href="https://www.sqlite.org/" class="text-blue-500 hover:underline" target="_blank">SQLite</a> 
+    and 
+    <a href="https://github.com/asg017/sqlite-vec" class="text-blue-500 hover:underline" target="_blank">sqlite-vec</a>, 
+    written by 
+    <a href="https://copilot.microsoft.com" class="text-blue-500 hover:underline" target="_blank">Copilot</a> 
+    © <%= new Date().getFullYear() %>
+  </footer>
+
+  <!-- Client-side script -->
+  <script type="module">
+    const id = document.getElementById('imageId').value;
+
+    async function loadImageInfo() {
+      try {
+        // Fetch metadata
+        const infoRes = await fetch(`/api/v1/info/${id}`);
+        const info = await infoRes.json();
+
+        // Update title
+        document.getElementById('imageTitle').textContent = capitalizeFirstLetter(info.title);
+
+        // Show details
+        const details = document.getElementById('imageDetails');
+        details.innerHTML = `
+          <p><strong>ID:</strong> ${info.id}</p>
+          <p><strong>File Name:</strong> ${info.fileName}</p>
+          <p><strong>Full Path:</strong> ${info.fullPath}</p>
+          <p><strong>Format:</strong> ${info.fileFormat}</p>
+          <p><strong>Size:</strong> ${info.fileSize} bytes</p>
+          <p><strong>Indexed At:</strong> ${info.indexedAt}</p>
+          <p><strong>Created At:</strong> ${info.createdAt}</p>
+          <p><strong>Modified At:</strong> ${info.modifiedAt}</p>          
+          <p><strong>Vector Length:</strong> ${info.vec_length}</p>
+        `;
+        details.classList.remove('hidden');
+      } catch (err) {
+        console.error('Error loading image info:', err);
+        document.getElementById('imageTitle').textContent = 'Error loading image';
+      }
+    }
+
+    loadImageInfo();
+
+    // Capitalize only the first letter
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+  </script>
+
+</body>
+</html>

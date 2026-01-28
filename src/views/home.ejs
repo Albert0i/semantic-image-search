@@ -9,7 +9,7 @@
 
   <!-- Title & Subtitle -->
   <h1 class="mb-2 text-3xl font-bold">Semantic Image Search</h1>
-  <p class="mb-6 text-gray-600">Search images by text description</p>
+  <p class="mb-6 text-gray-700">Search images by text description</p>
 
   <!-- Search Form -->
   <form id="searchForm" class="flex mb-8 space-x-2">
@@ -26,9 +26,21 @@
   <div id="results" class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">    
   </div>
 
+  <!-- Footer -->
+  <footer class="mt-12 text-sm text-gray-700">
+    Powered by 
+    <a href="https://www.sqlite.org/" class="text-blue-500 hover:underline" target="_blank">SQLite</a> 
+    and 
+    <a href="https://github.com/asg017/sqlite-vec" class="text-blue-500 hover:underline" target="_blank">sqlite-vec</a>, 
+    written by 
+    <a href="https://copilot.microsoft.com" class="text-blue-500 hover:underline" target="_blank">Copilot</a> 
+    © <%= new Date().getFullYear() %>
+  </footer>
+
   <!-- Client-side fetch -->
   <script type="module">
     const form = document.getElementById('searchForm');
+    
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const query = document.getElementById('query').value;
