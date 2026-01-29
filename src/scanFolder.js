@@ -57,12 +57,11 @@ const insertImageVector = db.prepare(`
  */
 function insertDatabase(filePath) {
     const stat = fs.statSync(filePath);
-    const now = new Date();
-
+    const now = new Date(Date.now() + 8 * 60 * 60 * 1000);
     const fileName = path.basename(filePath);
     const fileFormat = path.extname(filePath).slice(1).toLowerCase();
     const fileSize = stat.size;
-    const indexedAt = now.toISOString();
+    const indexedAt = now.toISOString();    
     const createdAt = stat.birthtime.toISOString();
     const modifiedAt = stat.mtime.toISOString();
     

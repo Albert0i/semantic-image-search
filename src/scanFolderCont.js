@@ -18,7 +18,7 @@ async function main() {
   for (const row of rows) {
     try {
       const filePath = row.fullPath;
-      const now = new Date();
+      const now = new Date(Date.now() + 8 * 60 * 60 * 1000);      
 
       if (row.title === '' && row.hash === '') {
         getImageCaption(filePath).then(output => { 
