@@ -218,11 +218,11 @@ router.get('/info', (req, res) => {
     "jpeg": 2,
     "gif": 1
   },
-  "untitled_images": 3813,
-  "last_indexed": "2026-01-29T05:08:47.435Z",
-  "max_updated": 0,
-  "images_vec": 0,
-  "vec_length": null,
+  "untitled_images": 3763,
+  "last_indexed": "2026-01-29T07:09:51.702Z",
+  "max_updated": 1,
+  "images_vec": 3813,
+  "vec_length": 512,
   "versions": {
     "sqlite": "3.51.1",
     "sqlite_vec": "v0.1.7-alpha.2"

@@ -8,6 +8,11 @@ router.get('/', (req, res) => {
   res.render('home', { results: null });
 });
 
+// GET info page
+router.get('/info', (req, res) => {
+  res.render('info'); 
+});
+
 // Image detail page
 router.get('/image/:id', (req, res) => {
   const { id } = req.params;

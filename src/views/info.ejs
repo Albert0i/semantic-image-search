@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Image Info</title>
+  <link rel="stylesheet" href="/styles/build.css">
+</head>
+<body class="text-gray-800 bg-gray-50">
+  <!-- Header -->
+  <header class="py-6 text-center">
+    <h1 class="text-3xl font-bold text-gray-900">Image Info</h1>
+  </header>
+
+  <!-- Content -->
+  <main class="max-w-3xl pl-20 mx-auto">
+    <div id="content" class="space-y-1 text-sm">Loading...</div>
+
+    <!-- Close button centered -->
+    <div class="flex justify-center mt-8">
+      <button onclick="window.close()" 
+              class="px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
+        Close
+      </button>
+    </div>
+  </main>
+
+  <script>
+    async function loadInfo() {
+      try {
+        const res = await fetch('/api/v1/info');
+        const data = await res.json();
+
+        const content = document.getElementById('content');
+        content.innerHTML = `
+          <p><strong>Total Images:</strong> ${data.images}</p>
+          <p><strong>Untitled Images:</strong> ${data.untitled_images}</p>
+          <p><strong>Images Vec:</strong> ${data.images_vec}</p>
+          <p><strong>Vector Length:</strong> ${data.vec_length}</p>
+          <p><strong>Formats:</strong></p>
+          ${Object.entries(data.formats).map(([fmt, count]) =>
+            `<p class="ml-8">${fmt}: ${count}</p>`
+          ).join('')}
+          <p><strong>Last Indexed:</strong> ${data.last_indexed}</p>
+          <p><strong>Max Updated:</strong> ${data.max_updated}</p>
+          <p><strong>SQLite Version:</strong> ${data.versions.sqlite}</p>
+          <p><strong>SQLite-vec Version:</strong> ${data.versions.sqlite_vec}</p>
+        `;
+      } catch (err) {
+        document.getElementById('content').innerText = 'Error loading info: ' + err;
+      }
+    }
+    loadInfo();
+  </script>
+</body>
+</html>
