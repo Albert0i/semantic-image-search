@@ -8,8 +8,15 @@
 </head>
 <body class="flex flex-col items-center min-h-screen p-8 bg-gray-100">
 
-  <!-- Title & Subtitle -->
-  <h1 class="mb-2 text-3xl font-bold">Semantic Image Search</h1>
+  <!-- Title with favicon -->
+  <h1 class="flex items-center space-x-2 text-3xl font-bold">
+    <span>Semantic Image Search</span>
+    <a href="/info" target="_blank"> 
+      <img src="/favicon.png" alt="favicon" class="w-8 h-8">
+    </a>    
+  </h1>    
+    
+  </h1>
   <p class="mb-6 text-gray-700">Search images by text description</p>
 
   <!-- Search Form -->
@@ -23,12 +30,6 @@
       class="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
       Search
     </button>
-
-    <!-- Info link -->
-    <a href="/info" target="_blank" 
-      class="flex items-center justify-center w-6 h-6 text-xs font-bold border border-yellow-600 rounded-full text-yellow5600 hover:bg-yellow-100">i
-    </a>
-
   </form>
 
   <!-- Results Grid -->
