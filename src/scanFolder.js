@@ -123,3 +123,12 @@ async function main() {
    main
 */
 main();
+
+/*
+   node src/scanFolder.js 
+
+   node src/scanFolder.js "./img"
+
+   npm run scan -- "./img"
+   npm run scan -- "D:\\RU2026\\semantic-image-search\\img"
+*/
