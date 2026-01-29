@@ -125,4 +125,5 @@ await main();
    npm run scan -- "./img"
    npm run scan -- "D:\\RU2026\\semantic-image-search\\img"
    npm run scan -- "D:\\Tmp"
+   npm run scan -- "H:\\Tmp"
 */
