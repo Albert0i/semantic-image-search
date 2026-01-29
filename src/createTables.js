@@ -9,7 +9,7 @@ console.log(db.exec(`
         fullPath VARCHAR(255) NOT NULL,
         fileFormat VARCHAR(16) NOT NULL,
         fileSize INTEGER NOT NULL,      
-        hash CHAR(64) NOT NULL,
+        hash CHAR(64) NOT NULL DEFAULT '',
         indexedAt VARCHAR(24) NOT NULL,
         createdAt VARCHAR(24) NOT NULL,
         modifiedAt VARCHAR(24) NOT NULL,

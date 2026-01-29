@@ -4,8 +4,9 @@
 import fs from 'fs';
 import path from 'path';
 import { db } from './utils/sqlite.js'
-import { normalizeVector } from './utils/utils.js'
+import { sha256FileSync, normalizeVector } from './utils/utils.js'
 import { getImageEmbeds } from './utils/embedder.js'
+import { getImageCaption } from './utils/captioner.js'
 
 const IMG_EXTENSIONS = /\.(jpg|jpeg|png|bmp|gif|tiff)$/i;
 const DEFAULT_FOLDER = path.resolve('./samples');
@@ -47,6 +48,9 @@ const insertImage = db.prepare(`
           updateIdent = updateIdent + 1
         RETURNING rowid, updateIdent;
   `);
+const updateImageTitle = db.prepare(`
+  UPDATE images set title=? where id=?;
+  `)
 const checkImageVector = db.prepare(`select rowid from images_vec where rowid = ?;`)
 const insertImageVector = db.prepare(`
     INSERT INTO images_vec(rowid, embedding) VALUES (?, ?);
@@ -65,14 +69,18 @@ function insertDatabase(filePath) {
     const indexedAt = now.toISOString();
     const createdAt = stat.birthtime.toISOString();
     const modifiedAt = stat.mtime.toISOString();
-    
-    const hash = ''    // Delay hash generation! 
-    // const hash = sha256FileSync(filePath) 
-
+    const hash = sha256FileSync(filePath)
+        
     // { id, updateIdent }
-    const { id, updateIdent } = insertImage.get(fileName, filePath, fileFormat, fileSize, hash, 
+    const { id } = insertImage.get(fileName, filePath, fileFormat, fileSize, hash, 
                                    indexedAt, createdAt, modifiedAt, 0)
-    //console.log('id =', id, 'updateIdent =', updateIdent)
+
+    getImageCaption(filePath).then(output => { 
+      //console.log('generated_text = ', output[0].generated_text) 
+      updateImageTitle.run(output[0].generated_text, id)
+    }).catch(error => {
+      console.log(error)
+    })
 
     // Either { rowid } or "undefined"
     const row = checkImageVector.get(id)
@@ -87,10 +95,8 @@ function insertDatabase(filePath) {
 
         console.log(`✅ Processed: ${filePath}`);
       }).catch(error => {
-        console.error(`❌ Error processing ${row.fullPath}:`, error);
+        console.log(error)
       })
-    } else {
-      console.log(`⏭️ Skipping: ${filePath}`);
     }
 }
 
@@ -116,7 +122,7 @@ async function main() {
 /*
    main
 */
-await main();
+main();
 
 /*
    node src/scanFolder.js 
@@ -125,5 +131,4 @@ await main();
 
    npm run scan -- "./img"
    npm run scan -- "D:\\RU2026\\semantic-image-search\\img"
-   npm run scan -- "D:\\Tmp"
 */
