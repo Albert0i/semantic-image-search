@@ -138,6 +138,98 @@ router.post('/search', async (req, res) => {
   }
 });
 
+// GET /info
+router.get('/info', (req, res) => {
+  try {
+    // 1. Total images
+    const totalImages = db.prepare('SELECT COUNT(*) AS count FROM images').get();
+
+    // 2. Count by fileFormat
+    const formatRows = db.prepare(`
+      SELECT fileFormat, COUNT(*) AS count
+      FROM images
+      GROUP BY fileFormat
+      ORDER BY count DESC
+    `).all();
+
+    const formats = {};
+    for (const row of formatRows) {
+      formats[row.fileFormat] = row.count;
+    }
+
+    // 3. Untitled (title='' and hash='')
+    const untitled = db.prepare(`
+      SELECT COUNT(*) AS count
+      FROM images
+      WHERE title = '' AND hash = ''
+    `).get();
+
+    // 4. Last indexed date and max update count
+    const lastRow = db.prepare(`
+      SELECT MAX(indexedAt) AS lastIndexed,
+             MAX(updateIdent) AS maxUpdateIdent
+      FROM images
+    `).get();
+
+    // 5. Count from images_vec
+    const vecCount = db.prepare('SELECT COUNT(*) AS count FROM images_vec').get();
+
+    // 6. Vector length (first embedding)
+    const vecLenRow = db.prepare(`
+      SELECT vec_length(embedding) AS length
+      FROM images_vec
+      LIMIT 1
+    `).get();
+
+    // 7. SQLite + SQLite-vec versions
+    const versions = db.prepare(`
+      SELECT sqlite_version() AS sqlite_version,
+             vec_version() AS vec_version
+    `).get();
+
+    // Return JSON in requested shape
+    res.json({
+      images: totalImages.count,
+      formats,
+      untitled_images: untitled.count,
+      last_indexed: lastRow.lastIndexed,
+      max_updated: lastRow.maxUpdateIdent,
+
+      images_vec: vecCount.count,
+      vec_length: vecLenRow ? vecLenRow.length : null,
+
+      versions: {
+        sqlite: versions.sqlite_version,
+        sqlite_vec: versions.vec_version
+      },
+      
+    });
+  } catch (err) {
+    console.error('[ERROR] /api/v1/api/info failed:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+/*
+{
+  "images": 3813,
+  "formats": {
+    "png": 3222,
+    "jpg": 588,
+    "jpeg": 2,
+    "gif": 1
+  },
+  "untitled_images": 3813,
+  "last_indexed": "2026-01-29T05:08:47.435Z",
+  "max_updated": 0,
+  "images_vec": 0,
+  "vec_length": null,
+  "versions": {
+    "sqlite": "3.51.1",
+    "sqlite_vec": "v0.1.7-alpha.2"
+  }
+}
+*/
+
 export default router;
 /*
 curl -X POST http://localhost:3000/api/v1/search -H "Content-Type: application/json" -d "{\"query\":\"cat\"}" | jq 
