@@ -1,5 +1,4 @@
 
-import 'dotenv/config'
 import { pipeline } from '@xenova/transformers';
 
 const captioner = await pipeline(
