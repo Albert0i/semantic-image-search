@@ -181,11 +181,18 @@ router.get('/info', (req, res) => {
       LIMIT 1
     `).get();
 
-    // 7. SQLite + SQLite-vec versions
+    // 7. Database size 
+    const dbSize = db.prepare(`
+      SELECT ROUND((page_count * page_size) / (1024.0 * 1024.0), 2)||'MB' AS size_mb
+      FROM pragma_page_count(), pragma_page_size();
+    `).get();
+
+    // 8. SQLite + SQLite-vec versions
     const versions = db.prepare(`
       SELECT sqlite_version() AS sqlite_version,
              vec_version() AS vec_version
     `).get();
+
 
     // Return JSON in requested shape
     res.json({
@@ -197,6 +204,7 @@ router.get('/info', (req, res) => {
 
       images_vec: vecCount.count,
       vec_length: vecLenRow ? vecLenRow.length : null,
+      database_size: dbSize.size_mb, 
 
       versions: {
         sqlite: versions.sqlite_version,
@@ -218,11 +226,12 @@ router.get('/info', (req, res) => {
     "jpeg": 2,
     "gif": 1
   },
-  "untitled_images": 3763,
-  "last_indexed": "2026-01-29T07:09:51.702Z",
+  "untitled_images": 0,
+  "last_indexed": "2026-01-29T17:55:12.722Z",
   "max_updated": 1,
   "images_vec": 3813,
   "vec_length": 512,
+  "database_size": "9.37MB",
   "versions": {
     "sqlite": "3.51.1",
     "sqlite_vec": "v0.1.7-alpha.2"

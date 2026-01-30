@@ -14,3 +14,6 @@ DB_PATH='./data/samples.db'
 
 # Server port 
 PORT=3000
+
+# Maximum search return
+MAX_RETURN=100
