@@ -16,6 +16,8 @@ The key to [semantic search](https://en.wikipedia.org/wiki/Semantic_search) is g
 - [SQLite](https://sqlite.org/): zero-configuration database engine. 
 - [@xenova/transformers](https://www.npmjs.com/package/@xenova/transformers): model are downloaded and cached automatically.
 
+
+#### II. Project Setup
 1. Clone the [repo](https://github.com/Albert0i/semantic-image-search.git): 
 ```
 git clone https://github.com/Albert0i/semantic-image-search.git
@@ -57,9 +59,6 @@ npm start
 ```
 
 And navigate to [http://localhost:3000/](http://localhost:3000/). Have fun... 
-
-
-#### II. 
 
 
 #### III. 
