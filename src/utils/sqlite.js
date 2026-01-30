@@ -37,11 +37,11 @@ const items = [
  ];
  const query = [0.1, 0.2, 0.3, 0.4];
  
- try {
-   db.exec(`DROP TABLE vec_items`)
- } catch (err) {
-   console.log(err.message)
- }
+//  try {
+//    db.exec(`DROP TABLE vec_items`)
+//  } catch (err) {
+//    console.log(err.message)
+//  }
 
  try {
    db.exec(`
@@ -68,9 +68,10 @@ const items = [
             LIMIT 3
          `)
       .all(new Uint8Array(new Float32Array(query).buffer));
-   
-      db.exec(`drop table vec_items;`)
-      db.exec(`vacuum;`)
+         
+   db.exec(`DROP TABLE vec_items`)
+   db.exec(`VACUUM;`)
+
    console.log(rows);
  } catch (err) {
    console.log(err.message)
