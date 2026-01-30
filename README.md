@@ -1,9 +1,5 @@
 ### Semantic Image Search
-> "Every struggle, no matter what its goal, is forced by life to make
-adjustments; it becomes a different struggle, serves different ends,
-and sometimes accomplishes the very opposite of what it set out to
-do. *Only slight goals are worth pursuing, because only a slight goal
-can be entirely fulfilled.* "<br /><br />"Todo esforço, qualquer que seja o fim para que tenda, sofre, ao manifestar-se, os desvios que a vida lhe impõe; torna-se outro esforço, serve outros fins, consuma por vezes o mesmo contrário do que pretendera realizar. *Só um baixo fim vale a pena, porque só um baixo fim se pode inteiramente efetuar.*"<br/>--- The Book of Disquiet by Fernando Pessoa
+> "Every struggle, no matter what its goal, is forced by life to make adjustments; it becomes a different struggle, serves different ends, and sometimes accomplishes the very opposite of what it set out to do. *Only slight goals are worth pursuing, because only a slight goal can be entirely fulfilled.* "<br /><br />"Todo esforço, qualquer que seja o fim para que tenda, sofre, ao manifestar-se, os desvios que a vida lhe impõe; torna-se outro esforço, serve outros fins, consuma por vezes o mesmo contrário do que pretendera realizar. *Só um baixo fim vale a pena, porque só um baixo fim se pode inteiramente efetuar.*"<br/>--- The Book of Disquiet by Fernando Pessoa
 
 
 #### Prologue
@@ -11,7 +7,7 @@ In the year of 2026, when "[AI slop](https://techcrunch.com/2026/01/05/microsoft
 
 
 #### I. Simplicity over functionality
-The key to [semantic search](https://en.wikipedia.org/wiki/Semantic_search) is generation of vector embedding and calculation of vector distance. While most people can't afford to buy [NVIDIA](https://www.nvidia.com/zh-tw/) GPU but still feel the taste of semantic search. Tools are deliberately chosen in an effort to deliver decent performance even though running on moderate to low-end notebook comp;uters. 
+The key to [semantic search](https://en.wikipedia.org/wiki/Semantic_search) is generation of vector embedding and calculation of vector distance. While most people can't afford a [NVIDIA](https://www.nvidia.com/zh-tw/) GPU but still feel the taste of semantic search. Tools are deliberately chosen in an effort to deliver decent performance even though running on moderate to low-end notebook comp;uters. 
 
 - [SQLite](https://sqlite.org/): zero-configuration database engine. 
 - [@xenova/transformers](https://www.npmjs.com/package/@xenova/transformers): model are downloaded and cached automatically.
