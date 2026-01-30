@@ -184,6 +184,9 @@ export async function getImageCaption(image_url) {
 
 
 #### IV. Summary 
+Generation of vector embedding is a time-consuming process. It may take hours or days to complete depending on number of images. A typical modern user has more than 10,000 photos which is not uncommon. To alleviate the situation, both `npm run scan` and `npm run cont` can be run multiple times. You can just terminate the `scan/cont` process by pressing `Ctrl-C`, next time when you run the same command, it will resume from where you leave and contine the generation. 
+
+Following the same procedure, multiple folders of image can be fed into the database. In case you mess up everything, just run `npm run create` to wipe off everything and restart from the very beginning. 
 
 
 #### V. Bibliography 
@@ -199,7 +202,7 @@ export async function getImageCaption(image_url) {
 
 
 #### Epilogue 
-Models are cached in: 
+Just for your information, models are cached in: 
 ```
 ./node_modules/@xenova.transformers/.cache/Xenova
 ```
@@ -207,4 +210,4 @@ Models are cached in:
 “To search images by text description...Sometimes it is accurate, other times it is humorous, but more often than not, it is a JOKE.”
 
 
-### EOF (2026/02/28)
+### EOF (2026/01/30)
