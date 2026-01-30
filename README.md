@@ -11,7 +11,7 @@ In the year of 2026, when "[AI slop](https://techcrunch.com/2026/01/05/microsoft
 
 
 #### I. Simplicity over functionality
-The key to [semantic search](https://en.wikipedia.org/wiki/Semantic_search) is generation of vector embedding and calculation of vector distance. While most people can't afford to buy [NVIDIA](https://www.nvidia.com/zh-tw/) GPU but still try the taste of semantic search. Tools are deliberately chosen in an effort to deliver decent performance even though running on moderate to low-end notebook comp;uters. 
+The key to [semantic search](https://en.wikipedia.org/wiki/Semantic_search) is generation of vector embedding and calculation of vector distance. While most people can't afford to buy [NVIDIA](https://www.nvidia.com/zh-tw/) GPU but still feel the taste of semantic search. Tools are deliberately chosen in an effort to deliver decent performance even though running on moderate to low-end notebook comp;uters. 
 
 - [SQLite](https://sqlite.org/): zero-configuration database engine. 
 - [@xenova/transformers](https://www.npmjs.com/package/@xenova/transformers): model are downloaded and cached automatically.
@@ -133,6 +133,7 @@ ALL tools invented should help and facilitate human life; not monitor and spy on
 ```
 ./node_modules/@xenova.transformers/.cache/Xenova
 ```
+“To search images by text description...Sometimes it is accurate, other times it is humorous, but more often than not, it is a JOKE.”
 
 
-### EOF (2026/01/31)
+### EOF (2026/02/28)
