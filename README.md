@@ -48,7 +48,7 @@ npm run create
 npm run scan -- "C:\\MyPhotos"
 ```
 
-6. Optionally, add *title* to all images: 
+6. Optionally, add *title* to images: 
 ```
 npm run cont 
 ```
@@ -61,10 +61,10 @@ npm start
 8. Navigate to [http://localhost:3000/](http://localhost:3000/) and have fun... 
 
 
-#### III. 
+#### III.  Insider's View
 
 
-#### IV. 
+#### IV. Summary 
 
 
 #### V. Bibliography 
