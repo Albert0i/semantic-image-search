@@ -62,6 +62,51 @@ npm start
 
 
 #### III.  Insider's View
+```
+GET /api/v1/info
+GET /api/v1/info/:id 
+GET /api/v1/preview/:id 
+GET /api/v1/image/:id 
+POST /api/v1/search/:id 
+```
+
+```
+GET /
+GET /image/:id
+GET /info
+```
+
+
+```
+CREATE TABLE images (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fileName VARCHAR(255) NOT NULL,
+    title TEXT NOT NULL DEFAULT '', 
+    fullPath VARCHAR(255) NOT NULL,
+    fileFormat VARCHAR(16) NOT NULL,
+    fileSize INTEGER NOT NULL,      
+    hash CHAR(64) NOT NULL DEFAULT '',
+    indexedAt VARCHAR(24) NOT NULL,
+    createdAt VARCHAR(24) NOT NULL,
+    modifiedAt VARCHAR(24) NOT NULL,
+    updateIdent INTEGER NOT NULL DEFAULT 0,
+    UNIQUE(fullPath)
+);
+```
+
+```
+CREATE VIRTUAL TABLE images_vec USING vec0 (
+        embedding float[512]
+    );
+```
+
+```
+SELECT rowid, distance
+    FROM images_vec
+    WHERE embedding MATCH ?
+    ORDER BY distance ASC
+    LIMIT ?;
+```
 
 
 #### IV. Summary 
