@@ -31,7 +31,17 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Serve static files (like CSS, images, and client-side JavaScript) from the 'public' directory
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
+
+// Define a route for the root URL ("/")
+// app.get("/", (req, res) => {
+//   // Render the 'index' view (index.ejs) and pass in some data
+//   res.render("index", {
+//       title: "Tracker App",
+//       message: "Welcome to your Tailwind-powered tracker!",
+//   });
+// });
 
 // Start the server and listen for incoming requests
 const port = process.env.PORT || 3000;
