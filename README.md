@@ -42,11 +42,13 @@ MAX_RETURN=100
 ```
 npm run create
 ```
+![alt create](img/create.JPG)
 
 5. Scan your image folder: 
 ```
 npm run scan -- "C:\\MyPhotos"
 ```
+![alt scan](img/scan.JPG)
 
 6. Optionally, add *title* to images: 
 ```
@@ -57,21 +59,29 @@ npm run cont
 ```
 npm start 
 ```
+![alt start](img/start.JPG)
 
 8. Navigate to [http://localhost:3000/](http://localhost:3000/) and have fun... 
+![alt home](img/home.JPG)
+
+![alt image](img/image.JPG)
+
+![alt info](img/info.JPG)
 
 
 #### III.  Insider's View
-canonical design. 
+This is a canonical [Node.js](https://nodejs.org/en) + [Express](https://expressjs.com/) + [EJS](https://ejs.co/) project featuring [tailwindcss](https://tailwindcss.com/). Backend API route `api.js` serves the following endpoints: 
 
 ```
-GET /api/v1/info
 GET /api/v1/info/:id 
-GET /api/v1/preview/:id 
+GET /api/v1/embed/:id 
 GET /api/v1/image/:id 
+GET /api/v1/preview/:id 
 POST /api/v1/search
+GET /api/v1/info
 ```
 
+Frontend route `home.js` serves the following endpoints:  
 ```
 GET /
 GET /image/:id
