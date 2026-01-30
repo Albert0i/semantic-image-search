@@ -9,25 +9,64 @@ can be entirely fulfilled.* "<br /><br />"Todo esforço, qualquer que seja o fim
 #### Prologue
 In the year of 2026, when "[AI slop](https://techcrunch.com/2026/01/05/microsofts-nadella-wants-us-to-stop-thinking-of-ai-as-slop/)" and "[Microslop](https://cybernews.com/ai-news/microsoft-ai-microslop-copilot/?utm_source=cn_facebook&utm_medium=social&utm_campaign=cybernews&utm_content=post&source=cn_facebook&medium=social&campaign=cybernews&content=post)" become internet buzzwords, all these impose introspection to what AI can do for human being. While most AI concept *stagnate* on fancy stage, the technique that prevails is *AI features* like  **semantic search**. 
 
-ALL tools invented should help and facilitate human life; not monitor and spy on human. 
 
+#### I. Simplicity over functionality
+The key to [semantic search](https://en.wikipedia.org/wiki/Semantic_search) is generation of vector embedding and calculation of vector distance. While most people can't afford to buy [NVIDIA](https://www.nvidia.com/zh-tw/) card but can still try semantic search. Tools are deliberately chosen in an effort to deliver decent performance even though running on moderate to low-end notebook comp;uters. 
 
-#### I. 
-Simplicity over functionality 
+- [SQLite](https://sqlite.org/): zero-configuration database engine. 
+- [@xenova/transformers](https://www.npmjs.com/package/@xenova/transformers): model are downloaded and cached automatically.
 
-moderate to low 
-deliver decent performance.   
+1. Clone the [repo](https://github.com/Albert0i/semantic-image-search.git): 
+```
+git clone https://github.com/Albert0i/semantic-image-search.git
+```
 
-GET /api/v1/info/:id
-GET /api/v1/embed/:id
-GET /api/v1/image
-POST /api/v1/search 
+2. Install packages: 
+```
+cd semantic-image-search
+
+npm install 
+```
+
+3. create an `.env` file: 
+```
+MODEL_ID=Xenova/clip-vit-base-patch16
+DB_PATH='./data/samples.db'
+PORT=3000
+MAX_RETURN=100
+```
+
+4. Create tables in SQLite: 
+```
+npm run create
+```
+
+5. Scan you image folder: 
+```
+npm run scan -- "C:\\MyPhotos"
+```
+
+6. Optionally, generate *title* ans *hash* for all images: 
+```
+npm run cont 
+```
+
+7. Start the server: 
+```
+npm start 
+```
+
+And navigate to [http://localhost:3000/](http://localhost:3000/). Have fun... 
+
 
 #### II. 
 
+
 #### III. 
 
+
 #### IV. 
+
 
 #### V. Bibliography 
 1. [SQLite Is ULTIMATE Choice For 99% of Projects](https://youtu.be/9RArbqGOvsw)
@@ -42,6 +81,12 @@ POST /api/v1/search
 
 
 #### Epilogue 
+
+ALL tools invented should help and facilitate human life; not monitor and spy on human. 
+
+```
+./node_modules/@xenova.transformers/.cache/Xenova
+```
 
 
 ### EOF (2026/01/31)
