@@ -88,7 +88,7 @@ GET /image/:id
 GET /info
 ```
 
-
+Due to limitation of [sqlite-vec](https://github.com/asg017/sqlite-vec), two separate tables are needed to store image information: 
 ```
 CREATE TABLE images (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -106,18 +106,80 @@ CREATE TABLE images (
 );
 ```
 
+And the embedding of images: 
 ```
 CREATE VIRTUAL TABLE images_vec USING vec0 (
         embedding float[512]
     );
 ```
+Care should be taken if you use a different model, `embedding float[512]` has to be modified accordingly. 
 
+To query for [k-nearest](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm) vectors: 
 ```
 SELECT rowid, distance
     FROM images_vec
     WHERE embedding MATCH ?
     ORDER BY distance ASC
     LIMIT ?;
+```
+
+Model `Xenova/clip-vit-base-patch16` is used to generate both image and text embedding in `embedder.js`: 
+```
+import 'dotenv/config'
+import { AutoTokenizer, CLIPTextModelWithProjection } from "@xenova/transformers";
+import { AutoProcessor, RawImage, CLIPVisionModelWithProjection } from '@xenova/transformers';
+
+// Load processor and vision model
+export const model_id = process.env.MODEL_ID
+
+// Load tokenizer and text model
+const tokenizer = await AutoTokenizer.from_pretrained(model_id);
+const text_model = await CLIPTextModelWithProjection.from_pretrained(model_id);
+
+// Load processor and vision model
+const processor = await AutoProcessor.from_pretrained(model_id);
+const vision_model = await CLIPVisionModelWithProjection.from_pretrained(model_id, {
+    quantized: false,
+});
+
+export async function getTextEmbeds(text) {
+   // Run tokenization
+   const text_inputs = tokenizer(text, { padding: true, truncation: true });
+
+   // Compute embeddings
+   const { text_embeds } = await text_model(text_inputs);
+   
+   return text_embeds
+}
+
+export async function getImageEmbeds(image_url) { 
+   // Read image
+   const image = await RawImage.read(image_url);
+
+   // Run processor
+   const image_inputs = await processor(image);
+
+   // Compute embeddings
+   const { image_embeds } = await vision_model(image_inputs);
+
+   return image_embeds
+}
+```
+
+Another model `Xenova/vit-gpt2-image-captioning` is used to grab a caption from image in `captioner/js`: 
+```
+import { pipeline } from '@xenova/transformers';
+
+const captioner = await pipeline(
+   'image-to-text', 
+   'Xenova/vit-gpt2-image-captioning'
+   );
+
+export async function getImageCaption(image_url) { 
+    const output = await captioner(image_url);
+
+   return output
+}
 ```
 
 
