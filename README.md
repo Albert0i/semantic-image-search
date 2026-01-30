@@ -13,6 +13,10 @@ ALL tools invented should help and facilitate human life; not monitor and spy on
 
 
 #### I. 
+Simplicity over functionality 
+
+moderate to low 
+deliver decent performance.   
 
 GET /api/v1/info/:id
 GET /api/v1/embed/:id
@@ -33,7 +37,8 @@ POST /api/v1/search
 5. [transformers.js](https://github.com/huggingface/transformers.js)
 6. [Hugging Face](https://huggingface.co/)
 7. [ServiceStack/images](https://github.com/ServiceStack/images)
-8. [The Book of Disquiet by Fernando Pessoa](https://dn720004.ca.archive.org/0/items/english-collections-1/Book%20of%20Disquiet%2C%20The%20-%20Fernando%20Pessoa.pdf)
+8. [Setting up Express MVC + EJS + TailwindCSS (4.0)](https://medium.com/@hannnirin/setting-up-express-mvc-ejs-tailwindcss-4-0-2ccac72dad59)
+9. [The Book of Disquiet by Fernando Pessoa](https://dn720004.ca.archive.org/0/items/english-collections-1/Book%20of%20Disquiet%2C%20The%20-%20Fernando%20Pessoa.pdf)
 
 
 #### Epilogue 
