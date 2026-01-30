@@ -62,12 +62,14 @@ npm start
 
 
 #### III.  Insider's View
+canonical design. 
+
 ```
 GET /api/v1/info
 GET /api/v1/info/:id 
 GET /api/v1/preview/:id 
 GET /api/v1/image/:id 
-POST /api/v1/search/:id 
+POST /api/v1/search
 ```
 
 ```
