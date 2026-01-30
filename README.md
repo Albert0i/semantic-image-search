@@ -43,12 +43,12 @@ MAX_RETURN=100
 npm run create
 ```
 
-5. Scan you image folder: 
+5. Scan your image folder: 
 ```
 npm run scan -- "C:\\MyPhotos"
 ```
 
-6. Optionally, generate *title* ans *hash* for all images: 
+6. Optionally, add *title* to all images: 
 ```
 npm run cont 
 ```
@@ -58,7 +58,9 @@ npm run cont
 npm start 
 ```
 
-And navigate to [http://localhost:3000/](http://localhost:3000/). Have fun... 
+Navigate to [http://localhost:3000/](http://localhost:3000/). 
+
+8. Have fun... 
 
 
 #### III. 
