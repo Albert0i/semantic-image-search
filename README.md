@@ -199,12 +199,11 @@ export async function getImageCaption(image_url) {
 
 
 #### Epilogue 
-
-ALL tools invented should help and facilitate human life; not monitor and spy on human. 
-
+Models are cached in: 
 ```
 ./node_modules/@xenova.transformers/.cache/Xenova
 ```
+
 “To search images by text description...Sometimes it is accurate, other times it is humorous, but more often than not, it is a JOKE.”
 
 
