@@ -41,6 +41,11 @@ app.use('/', homeRoute);
 // Mount all API route under /api/v1
 app.use('/api/v1', apiRoute);
 
+// 404 route (catch-all)
+app.use((req, res) => {
+    res.status(404).render('404');
+  });
+  
 // Start the server and listen for incoming requests
 app.listen(port, () => {
     console.log(`Express server started at http://localhost:${port}`);

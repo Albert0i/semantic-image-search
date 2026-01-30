@@ -1,4 +1,5 @@
 // api.js
+import 'dotenv/config'
 import express from 'express';
 import { db } from '../utils/sqlite.js'
 import { getTextEmbeds } from '../utils/embedder.js'
@@ -129,8 +130,9 @@ router.post('/search', async (req, res) => {
     
     const text_embeds = await getTextEmbeds(query)
     const query_embedding = normalizeVector(text_embeds.tolist()[0]);
+    const limit = process.env.MAX_RETURN || 10
     
-    const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(query_embedding).buffer), 10)
+    const rows = stmtImagesQuery.all(new Uint8Array(new Float32Array(query_embedding).buffer), limit)
 
     res.json(rows);
   } catch (err) {

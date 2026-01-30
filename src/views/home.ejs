@@ -63,13 +63,15 @@
 
       const resultsDiv = document.getElementById('results');
       resultsDiv.innerHTML = '';
-      data.forEach(({ rowid, distance }) => {
+      data.forEach(({ rowid, distance }, index) => {
         const card = document.createElement('div');
         card.className = 'bg-white shadow rounded overflow-hidden';
         card.innerHTML = `
-          <div class="p-2 font-bold text-center">
-            distance: ${distance.toFixed(4)}
+          <div class="flex justify-between p-2 font-bold">
+            <span>${index + 1}. </span>
+            <span>distance:  ${distance.toFixed(4)} </span>
           </div>
+
           <a href="/image/${rowid}" target="_blank">
             <img src="/api/v1/preview/${rowid}"
                  alt="Image ${rowid}"
