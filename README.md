@@ -166,7 +166,7 @@ export async function getImageEmbeds(image_url) {
 }
 ```
 
-Another model `Xenova/vit-gpt2-image-captioning` is used to grab a caption from image in `captioner/js`: 
+Another model `Xenova/vit-gpt2-image-captioning` is used to grab caption from an image in `captioner/js`: 
 ```
 import { pipeline } from '@xenova/transformers';
 
