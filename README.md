@@ -58,9 +58,7 @@ npm run cont
 npm start 
 ```
 
-Navigate to [http://localhost:3000/](http://localhost:3000/). 
-
-8. Have fun... 
+8/ Navigate to [http://localhost:3000/](http://localhost:3000/) and have fun... 
 
 
 #### III. 
