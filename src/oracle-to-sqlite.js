@@ -13,8 +13,6 @@ function transformSql(sql, fileName) {
   const baseName = path.basename(fileName, path.extname(fileName));
   const tableName = baseName.replace(/\./g, '_');
 
-  // --- Split into statements by semicolon (keep the semicolon attached ) ---  
-  //const statements = sql.split(/(?<=;)/);
   // -- Split after ; OR before -- Data
   const statements = sql.split(/(?<=;)|(?<=-- Data)/)   
     
@@ -103,33 +101,7 @@ function mapDataTypes(stmt) {
   return out;
 }
 
-// // Clean only quoted strings inside VALUES(...) lists
-// function cleanValuesQuotedStrings(stmt) {
-//   const m = stmt.match(/\bVALUES\s*\(/i);
-//   if (!m) return stmt;
-
-//   const idx = m.index;
-//   const head = stmt.slice(0, idx);
-//   let tail = stmt.slice(idx);
-
-//   // Allow ASCII printable + all major Chinese ranges
-//   tail = tail.replace(/'([^']*)'/g, (m, inner) => {
-//     // strip control characters (non‑printable), leaving all Unicode intact
-//     const cleaned = inner.replace(/[\x00-\x1F\x7F]/g, ' ');
-//     return `'${cleaned}'`;
-//   });
-
-//   return head + tail;
-// }
-// // Clean quoted strings and strip control characters
-// function cleanValuesQuotedStrings(stmt) {
-//   // Allow ASCII printable + all major Chinese ranges
-//   return stmt.replace(/'([^']*)'/g, (m, inner) => {
-//     // Strip control characters (non‑printable), leaving all Unicode intact
-//     const cleaned = inner.replace(/[\x00-\x1F\x7F]/g, '');
-//     return `'${cleaned}'`;
-//   });
-// }
+// Clean only control characters
 function cleanAllControlChars(stmt) {
   // Strip ASCII control characters (0x00–0x1F and 0x7F) everywhere
   return stmt.replace(/[\x00-\x1F\x7F]/g, '');
@@ -181,7 +153,5 @@ processFolder(inputDir, outputDir).catch(err => {
 /*
    node src/oracle-to-sqlite.js "H:\\PHLIB\\2012" "H:\\PHLIB.SQLITE\\2012"
 
-   sqlite3 -bail ./data/db.sq3 < "H:\PHLIB.SQLITE\2012\PH201212.BMBDG.sql"
-
-   npm run sql
+   loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2012
 */
