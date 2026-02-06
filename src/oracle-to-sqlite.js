@@ -67,7 +67,7 @@ function transformSql(sql, fileName) {
     stmt = cleanAllControlChars(stmt);
     insertBuffer += stmt
   }
-  //checkAndOutputInsertBuffer()
+  checkAndOutputInsertBuffer()
 
   return output.join('\n') + '\n';
 }
