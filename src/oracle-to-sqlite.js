@@ -7,66 +7,27 @@ async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
 }
 
-// --- Core Transformer 
+// --- Core Transformer (version two: multi-line INSERT fix)
 function transformSql(sql, fileName) {
   // Derive prefixed table name from filename: PH201212.BMBDG.sql.txt → PH201212_BMBDG
   const baseName = path.basename(fileName, path.extname(fileName));
   const tableName = baseName.replace(/\./g, '_');
 
-  // --- Helpers ---
-  function mapDataTypes(stmt) {
-    let out = stmt;
-
-    // VARCHAR2 / NVARCHAR2 / CHAR
-    out = out.replace(/\bVARCHAR2\s*\(\s*(\d+)\s*CHAR\s*\)(?=[,\s)])/gi, (m, n) => `VARCHAR(${n})`);
-    out = out.replace(/\bVARCHAR2\s*\(\s*(\d+)\s*BYTE\s*\)(?=[,\s)])/gi, (m, n) => `VARCHAR(${n})`);
-    out = out.replace(/\bVARCHAR2\s*\(\s*(\d+)\s*\)(?=[,\s)])/gi, (m, n) => `VARCHAR(${n})`);
-    out = out.replace(/\bNVARCHAR2\s*\(\s*(\d+)\s*(CHAR|BYTE)?\s*\)(?=[,\s)])/gi, (m, n) => `VARCHAR(${n})`);
-    out = out.replace(/\bCHAR\s*\(\s*(\d+)\s*(CHAR|BYTE)?\s*\)(?=[,\s)])/gi, (m, n) => `CHAR(${n})`);
-
-    // NUMBER / DECIMAL
-    out = out.replace(/\bNUMBER\s*\(\s*(\d+)\s*,\s*0\s*\)(?=[,\s)])/gi, 'INTEGER');
-    out = out.replace(/\bDECIMAL\s*\(\s*(\d+)\s*,\s*0\s*\)(?=[,\s)])/gi, 'INTEGER');
-    out = out.replace(/\bNUMBER\s*\(\s*\d+\s*,\s*\d+\s*\)(?=[,\s)])/gi, 'REAL');
-    out = out.replace(/\bDECIMAL\s*\(\s*\d+\s*,\s*\d+\s*\)(?=[,\s)])/gi, 'REAL');
-    out = out.replace(/\bNUMBER\s*\(\s*\d+\s*\)(?=[,\s)])/gi, 'INTEGER');
-    out = out.replace(/\bDECIMAL\s*\(\s*\d+\s*\)(?=[,\s)])/gi, 'INTEGER');
-    out = out.replace(/\bNUMBER\b(?=[,\s)])/gi, 'REAL');
-
-    // DATE / TIMESTAMP
-    out = out.replace(/\bDATE\b(?=[,\s)])/gi, 'TEXT');
-    out = out.replace(/\bTIMESTAMP(?:\s*\(\s*\d+\s*\))?\b(?=[,\s)])/gi, 'TEXT');
-
-    // CLOB / RAW
-    out = out.replace(/\bCLOB\b(?=[,\s)])/gi, 'TEXT');
-    out = out.replace(/\bRAW\s*\(\s*\d+\s*\)(?=[,\s)])/gi, 'BLOB');
-
-    return out;
-  }
-
-  // Clean only quoted strings inside VALUES(...) lists
-  function cleanValuesQuotedStrings(stmt) {
-    const m = stmt.match(/\bVALUES\s*\(/i);
-    if (!m) return stmt;
-  
-    const idx = m.index;
-    const head = stmt.slice(0, idx);
-    let tail = stmt.slice(idx);
-  
-    // Allow ASCII printable + all major Chinese ranges
-    tail = tail.replace(/'([^']*)'/g, (m, inner) => {
-      // strip control characters (non‑printable), leaving all Unicode intact
-      const cleaned = inner.replace(/[\x00-\x1F\x7F]/g, ' ');
-      return `'${cleaned}'`;
-    });
-  
-    return head + tail;
-  }
-
-  // --- Split into statements by semicolon (keep robustness for Windows newlines) ---
-  const statements = sql.split(/;\s*(?:\r?\n|$)/);
-
+  // --- Split into statements by semicolon (keep the semicolon attached ) ---  
+  //const statements = sql.split(/(?<=;)/);
+  // -- Split after ; OR before -- Data
+  const statements = sql.split(/(?<=;)|(?<=-- Data)/)   
+    
   const output = [];
+  let insertBuffer = ""; // buffer for multi-line INSERT
+
+  function checkAndOutputInsertBuffer() {
+    // If we are currently buffering an INSERT
+    if (insertBuffer.length != 0) {
+      output.push(insertBuffer)
+      insertBuffer = ""
+    }
+  }
 
   for (let stmt of statements) {
     stmt = stmt.trim();
@@ -76,7 +37,7 @@ function transformSql(sql, fileName) {
     if (/^\s*ALTER\s+SESSION\b/i.test(stmt)) continue;
     
     // 3) Discard COMMENT 
-    if (/^\s*--/.test(stmt)) continue;
+    if (/^\s*--/.test(stmt)) continue
     if (/^COMMENT\s\b/i.test(stmt)) continue;
 
     // 2) CREATE TABLE
@@ -84,30 +45,95 @@ function transformSql(sql, fileName) {
       // Replace table name (first token after CREATE TABLE)
       stmt = stmt.replace(/^(CREATE\s+TABLE\s+)(\S+)/i, (_, pfx) => `${pfx}${tableName.replace('_sql', '')}`);
       stmt = mapDataTypes(stmt);
-      output.push(stmt + ';');
+      output.push(stmt);
+
       continue;
     }
 
     // 4) INSERT
     if (/^INSERT\s+INTO\b/i.test(stmt)) {
+      checkAndOutputInsertBuffer()
+
       // Replace only the table name token after INSERT INTO
       stmt = stmt.replace(/^(INSERT\s+INTO\s+)(\S+)/i, (_, __, tbl) => `INSERT INTO ${tableName.replace('_sql', '')}`);
 
-      // Clean quoted strings only in VALUES(...) part
-      stmt = cleanValuesQuotedStrings(stmt);
-      output.push(stmt + ';');
+      // Starting buffering...?
+      insertBuffer = cleanAllControlChars(stmt);
+
       continue;
     }
-
-    // Other statements: keep as-is
-    //output.push(stmt + ';');
+      
+    // Other things encountered... Continue buffering...
+    stmt = cleanAllControlChars(stmt);
+    insertBuffer += stmt
   }
+  //checkAndOutputInsertBuffer()
 
-  //return output.join('\n\n') + '\n';
   return output.join('\n') + '\n';
 }
 
+// --- Helpers ---
+function mapDataTypes(stmt) {
+  let out = stmt;
 
+  // VARCHAR2 / NVARCHAR2 / CHAR
+  out = out.replace(/\bVARCHAR2\s*\(\s*(\d+)\s*CHAR\s*\)(?=[,\s)])/gi, (m, n) => `VARCHAR(${n})`);
+  out = out.replace(/\bVARCHAR2\s*\(\s*(\d+)\s*BYTE\s*\)(?=[,\s)])/gi, (m, n) => `VARCHAR(${n})`);
+  out = out.replace(/\bVARCHAR2\s*\(\s*(\d+)\s*\)(?=[,\s)])/gi, (m, n) => `VARCHAR(${n})`);
+  out = out.replace(/\bNVARCHAR2\s*\(\s*(\d+)\s*(CHAR|BYTE)?\s*\)(?=[,\s)])/gi, (m, n) => `VARCHAR(${n})`);
+  out = out.replace(/\bCHAR\s*\(\s*(\d+)\s*(CHAR|BYTE)?\s*\)(?=[,\s)])/gi, (m, n) => `CHAR(${n})`);
+
+  // NUMBER / DECIMAL
+  out = out.replace(/\bNUMBER\s*\(\s*(\d+)\s*,\s*0\s*\)(?=[,\s)])/gi, 'INTEGER');
+  out = out.replace(/\bDECIMAL\s*\(\s*(\d+)\s*,\s*0\s*\)(?=[,\s)])/gi, 'INTEGER');
+  out = out.replace(/\bNUMBER\s*\(\s*\d+\s*,\s*\d+\s*\)(?=[,\s)])/gi, 'REAL');
+  out = out.replace(/\bDECIMAL\s*\(\s*\d+\s*,\s*\d+\s*\)(?=[,\s)])/gi, 'REAL');
+  out = out.replace(/\bNUMBER\s*\(\s*\d+\s*\)(?=[,\s)])/gi, 'INTEGER');
+  out = out.replace(/\bDECIMAL\s*\(\s*\d+\s*\)(?=[,\s)])/gi, 'INTEGER');
+  out = out.replace(/\bNUMBER\b(?=[,\s)])/gi, 'REAL');
+
+  // DATE / TIMESTAMP
+  out = out.replace(/\bDATE\b(?=[,\s)])/gi, 'TEXT');
+  out = out.replace(/\bTIMESTAMP(?:\s*\(\s*\d+\s*\))?\b(?=[,\s)])/gi, 'TEXT');
+
+  // CLOB / RAW
+  out = out.replace(/\bCLOB\b(?=[,\s)])/gi, 'TEXT');
+  out = out.replace(/\bRAW\s*\(\s*\d+\s*\)(?=[,\s)])/gi, 'BLOB');
+
+  return out;
+}
+
+// // Clean only quoted strings inside VALUES(...) lists
+// function cleanValuesQuotedStrings(stmt) {
+//   const m = stmt.match(/\bVALUES\s*\(/i);
+//   if (!m) return stmt;
+
+//   const idx = m.index;
+//   const head = stmt.slice(0, idx);
+//   let tail = stmt.slice(idx);
+
+//   // Allow ASCII printable + all major Chinese ranges
+//   tail = tail.replace(/'([^']*)'/g, (m, inner) => {
+//     // strip control characters (non‑printable), leaving all Unicode intact
+//     const cleaned = inner.replace(/[\x00-\x1F\x7F]/g, ' ');
+//     return `'${cleaned}'`;
+//   });
+
+//   return head + tail;
+// }
+// // Clean quoted strings and strip control characters
+// function cleanValuesQuotedStrings(stmt) {
+//   // Allow ASCII printable + all major Chinese ranges
+//   return stmt.replace(/'([^']*)'/g, (m, inner) => {
+//     // Strip control characters (non‑printable), leaving all Unicode intact
+//     const cleaned = inner.replace(/[\x00-\x1F\x7F]/g, '');
+//     return `'${cleaned}'`;
+//   });
+// }
+function cleanAllControlChars(stmt) {
+  // Strip ASCII control characters (0x00–0x1F and 0x7F) everywhere
+  return stmt.replace(/[\x00-\x1F\x7F]/g, '');
+}
 
 // --- Folder Walker ---
 async function processFolder(inputDir, outputDir) {
