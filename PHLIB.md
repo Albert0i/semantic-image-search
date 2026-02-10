@@ -117,11 +117,11 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 #### III. Reminiscence
 The frist part  of this project is written in [ASP.NET 2.0](https://learn.microsoft.com/zh-tw/aspnet/web-forms/overview/moving-to-aspnet-20/) + [ODBC](https://zh.wikipedia.org/zh-tw/ODBC) +  [IBM AS/400](https://en.wikipedia.org/wiki/IBM_AS/400), which are definitely stone-age techniques and most modern programmers not familiar with or even unheard of; the second part is in [NodeJS](https://nodejs.org/en) + [SQLite](https://sqlite.org/), which are state of the art tools. The first part is running on [Windows XP](https://zh.wikipedia.org/zh-tw/Windows_XP) while the second part is running on [Windows 11](https://en.wikipedia.org/wiki/Windows_11). 
 
-I have to restate that my Windows XP, with 3G RAM and on 30G disk, run [IIS](https://en.wikipedia.org/wiki/Internet_Information_Services )5.1.smoothly... and this is exactly what an [Operating System](https://en.wikipedia.org/wiki/Operating_system) should be. 
+I have to restate that my Windows XP, with 3G RAM and on 30G disk, run [IIS](https://en.wikipedia.org/wiki/Internet_Information_Services ) 5.1.smoothly... and this is exactly what an [Operating System](https://en.wikipedia.org/wiki/Operating_system) should be. Hurray! 
 
 ![alt Windows XP](img/windows-xp.JPG)
 
-The composite evinces new possibility on problem solving domain. It is a journey of the past; it is a quest to the future... 
+This composite reveals new possibilities in the domain of problem solving. It is a journey into the past and a quest toward the future — the only limit is your imagination. 
 
 
 #### IV. Bibliography 
