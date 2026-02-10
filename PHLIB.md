@@ -115,13 +115,13 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 
 
 #### III. Reminiscence
-It is a journey of the past; it is a quest to the future. The frist half consists of this project is written in [ASP.NET 2.0](https://learn.microsoft.com/zh-tw/aspnet/web-forms/overview/moving-to-aspnet-20/) + [ODBC](https://zh.wikipedia.org/zh-tw/ODBC) +  AS400, which are stone-age techniques and most modern programmers not familiar with or event unheard of; the second half consists of [NodeJS](https://nodejs.org/en) + [SQLite](https://sqlite.org/), which are state of the art tools. The first half is running on [Windows XP](https://zh.wikipedia.org/zh-tw/Windows_XP) while the second part is running on [Windows 11](https://en.wikipedia.org/wiki/Windows_11). 
+The frist half consists of this project is written in [ASP.NET 2.0](https://learn.microsoft.com/zh-tw/aspnet/web-forms/overview/moving-to-aspnet-20/) + [ODBC](https://zh.wikipedia.org/zh-tw/ODBC) +  AS400, which are stone-age techniques and most modern programmers not familiar with or event unheard of; the second half consists of [NodeJS](https://nodejs.org/en) + [SQLite](https://sqlite.org/), which are state of the art tools. The first half is running on [Windows XP](https://zh.wikipedia.org/zh-tw/Windows_XP) while the second part is running on [Windows 11](https://en.wikipedia.org/wiki/Windows_11). 
 
 I have to restate that my Windows XP, with 3G RAM and on 30G disk, run [IIS](https://en.wikipedia.org/wiki/Internet_Information_Services )5.1.smoothly... and this is exactly what an [Operating System](https://en.wikipedia.org/wiki/Operating_system) should be. 
 
 ![alt Windows XP](img/windows-xp.JPG)
 
-The composite evinces new possibility pm problem solving domain. 
+The composite evinces new possibility pm problem solving domain. It is a journey of the past; it is a quest to the future... 
 
 
 #### IV. Bibliography 
