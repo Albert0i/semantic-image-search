@@ -3,22 +3,23 @@
 
 
 #### Prologue 
-Furture is unknown, what we know so far is called *history*. To live is not to forget, to write is not to forget, idiots forget while geniuses forgive... I am here to pen down my opinionated story about **PHLIB**. To begin with, let's date back to the year of 2012...
+Furture is unknown, what we know so far is called *history*. To live is not to forget, to write is not to forget, idiots forget while geniuses forgive... I am here to pen down my opinionated story about **PHLIB**. To begin with, let's back to the year of 2012...
 
-At that epoch, We were using **DB/400** on **AS/400** as main platform, due to statistical requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of each month, where YYYY is year, MM is month. In the year of 2017, a migration was planned from **DB2/400** to **Oracle**. In the year of 2019, **XRunner** project, which was written in [ASP.NET Web Forms](https://en.wikipedia.org/wiki/ASP.NET_Web_Forms), rolled out in an effort to: 
+At that epoch, We were using **DB/400** on **AS/400** as sole platform, due to statistical requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of each month, where YYYY is year, MM is month. In the year of 2017, a migration was planned from **DB2/400** to **Oracle**. In the year of 2019, **XRunner** project, which was written in [ASP.NET Web Forms](https://en.wikipedia.org/wiki/ASP.NET_Web_Forms), rolled out in an effort to: 
 
 1. Facilitates creation of tables in Oracle according to definition in DB2/400; 
 2. Copies data from DB/400 to Oracle, this enables one-way synchronization on a scheduled base; 
 3. Facilitates execution of SQL statements on both platforms; 
-4. Dump tables from DB/400 in text suitable for Oracle import; 
+4. Dump tables from DB/400 in text format suitable for Oracle import; 
 
 Until 2025, the migration has not finished but the target database was abandoned prematurely! The new platform is not determined so much the worse... As of this writing, there are more than 8000 tables in snapshot... and this legacy data gets detained and stagnates thenceforth. In a couple of years, I believe, AS/400 will fade out and [all those tables will be lost in time, like tears in the rain](https://www.reddit.com/r/QuotesPorn/comments/bn497r/all_those_moments_will_be_lost_in_time_like_tears/). 
 
-My idea is to dump all out, convert them into general SQL syntax and feed them into a third party database, [SQLite](https://sqlite.org/) is the natural choice in this circumstance. 
+Suddenly, a whimsical idea dawned upon me: To dump all out, convert them into general SQL syntax and feed them into a third party database, [SQLite](https://sqlite.org/) seems the natural choice in this circumstance. 
 
 
-#### I. Generate the SQL dump
-The process, which involves five steps, is quite tedious, a drudgery indeed: 
+#### I. Generation and Conversion
+The process, which involves five steps, is quite tedious — more accurately, it is drudgery.
+
 1. Gather meta data of tables from snapshot libraries; 
 
 This requires running `DSPFD` command for each snapshot library in AS/400 command line. 
@@ -114,10 +115,14 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 
 
 #### III. Reminiscence
-It is a journey of the past; it is a quest to the future. 
+It is a journey of the past; it is a quest to the future. The frist half consists of this project is written in [ASP.NET 2.0](https://learn.microsoft.com/zh-tw/aspnet/web-forms/overview/moving-to-aspnet-20/) + [ODBC](https://zh.wikipedia.org/zh-tw/ODBC) +  AS400, which are stone-age techniques and most modern programmers not familiar with or event unheard of; the second half consists of [NodeJS](https://nodejs.org/en) + [SQLite](https://sqlite.org/), which are state of the art tools. The first half is running on [Windows XP](https://zh.wikipedia.org/zh-tw/Windows_XP) while the second part is running on [Windows 11](https://en.wikipedia.org/wiki/Windows_11). 
 
+I have to restate that my Windows XP, with 3G RAM and on 30G disk, run [IIS](https://en.wikipedia.org/wiki/Internet_Information_Services )5.1.smoothly... and this is exactly what an [Operating System](https://en.wikipedia.org/wiki/Operating_system) should be. 
 
-reminiscence
+![alt Windows XP](img/windows-xp.JPG)
+
+The composite evinces new possibility pm problem solving domain. 
+
 
 #### IV. Bibliography 
 1. [SQLite Is ULTIMATE Choice For 99% of Projects](https://youtu.be/9RArbqGOvsw)
