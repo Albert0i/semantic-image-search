@@ -123,6 +123,8 @@ I have to restate that my Windows XP, with 3G RAM and on 30G disk, run [IIS](htt
 
 This composite reveals new possibilities in the domain of problem solving. It is a journey into the past and a quest toward the future — the only limit is your imagination. 
 
+Last but not least, i use AI, ie [copilot](https://copilot.microsoft.com/), extensively on day-to-day life. It helps to layout code foundation and oftentimes the suggestions are correct while other times not. AI is a tool after all, use it on your own risk and don't let [the tail wagging the dog](https://www.merriam-webster.com/dictionary/the%20tail%20wagging%20the%20dog). 
+
 
 #### IV. Bibliography 
 1. [SQLite Is ULTIMATE Choice For 99% of Projects](https://youtu.be/9RArbqGOvsw)
