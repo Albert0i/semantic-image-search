@@ -121,7 +121,7 @@ I have to restate that my Windows XP, with 3G RAM and on 30G disk, run [IIS](htt
 
 ![alt Windows XP](img/windows-xp.JPG)
 
-The composite evinces new possibility pm problem solving domain. It is a journey of the past; it is a quest to the future... 
+The composite evinces new possibility on problem solving domain. It is a journey of the past; it is a quest to the future... 
 
 
 #### IV. Bibliography 
