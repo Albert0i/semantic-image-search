@@ -3,23 +3,23 @@
 
 
 #### Prologue 
-Furture is unknown, what we know so far is called *history*. To live is not to forget, to write is not to forget, idiots forget while geniuses forgive... I am here to pen down my opinionated story about **PHLIB**. To begin with, let's date back to 2012. 
+Furture is unknown, what we know so far is called *history*. To live is not to forget, to write is not to forget, idiots forget while geniuses forgive... I am here to pen down my opinionated story about **PHLIB**. To begin with, let's date back to the year of 2012...
 
-At that time, We were using DB/400 on AS/400 as main platform and due to statistic requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of each month, where YYYY is year, MM is month. In the year of 2017, a migration was planned from DB2/400 to Oracle. In the year of 2019, the **XRunner** project, which was written in ASP.NET 2.0 WebForm, rolled out with purpose of: 
+At that epoch, We were using **DB/400** on **AS/400** as main platform, due to statistical requirement, a monthly snapshot was taken by copying production files into new library named PH*YYYYMM* at the end of each month, where YYYY is year, MM is month. In the year of 2017, a migration was planned from **DB2/400** to **Oracle**. In the year of 2019, **XRunner** project, which was written in [ASP.NET Web Forms](https://en.wikipedia.org/wiki/ASP.NET_Web_Forms), rolled out in an effort to: 
 
 1. Facilitates creation of tables in Oracle according to definition in DB2/400; 
 2. Copies data from DB/400 to Oracle, this enables one-way synchronization on a scheduled base; 
 3. Facilitates execution of SQL statements on both platforms; 
 4. Dump tables from DB/400 in text suitable for Oracle import; 
 
-Until 2025, the migration process has not finished but the target database was abandoned! And the new database is not known so much the worse... As of this writing, there are more than 8000 tables in snapshot... and this legacy data gets detained and stagnates. In a couple of years, AS/400 will fade out and [all those tables will be lost in time, like tears in the rain](https://www.reddit.com/r/QuotesPorn/comments/bn497r/all_those_moments_will_be_lost_in_time_like_tears/). 
+Until 2025, the migration has not finished but the target database was abandoned prematurely! The new platform is not determined so much the worse... As of this writing, there are more than 8000 tables in snapshot... and this legacy data gets detained and stagnates thenceforth. In a couple of years, I believe, AS/400 will fade out and [all those tables will be lost in time, like tears in the rain](https://www.reddit.com/r/QuotesPorn/comments/bn497r/all_those_moments_will_be_lost_in_time_like_tears/). 
 
-My idea is to dump all out, convert them into general SQL syntax and feed them into a third party database, [SQLite](https://sqlite.org/) becomes the natural choice. 
+My idea is to dump all out, convert them into general SQL syntax and feed them into a third party database, [SQLite](https://sqlite.org/) is the natural choice in this circumstance. 
 
 
 #### I. Generate the SQL dump
-To be honest, the whole process is quite complicated which involves: 
-1. Gather meta info of tables from snapshot libraries; 
+The process, which involves five steps, is quite tedious, a drudgery indeed: 
+1. Gather meta data of tables from snapshot libraries; 
 
 This requires running `DSPFD` command for each snapshot library in AS/400 command line. 
 ```
@@ -27,7 +27,7 @@ DSPFD FILE(PH202509/*ALL) TYPE(*BASATR) OUTPUT(*OUTFILE) OUTFILE(ALBERTOI/PH2025
 ```
 ![alt DSPFD](img/DSPFD.JPG)
 
-2. Add meta info to repository; 
+2. Add meta data to repository; 
 
 This requires running `INSERT INTO` statement for each snapshot library using whichever SQL client you prefer. 
 ```
@@ -35,29 +35,29 @@ insert into albertoi.phlibpf
 ( select * from albertoi.PH202509 )
 ```
 
-3. Run **libDump** to dump snapshot tables of a year;
+3. Run **libDump** utility to dump snapshot tables into text format; 
 
-This requires hosting XRunner and type in URL on browser: 
+This requires hosting **XRunner** and type in URL in browser: 
 ```
 http://localhost/xr/LibDump400.aspx?libName=PH2025&data=yes
 ```
 ![alt libDump](img/libDump.JPG)
 
-4. Convert SQL dump into general syntax;
+4. Convert SQL dump from Oracle format to SQLite format;
 
 This requires running `oracle-to-sqlite.js` with proper parameters:
 ```
 node src/oracle-to-sqlite.js "H:\\PHLIB\\2025" "H:\\PHLIB.SQLITE\\2025"
 ```
 
-5. Load all new SQL dump into SQLite;  
+5. Load all converted SQL dump into SQLite; 
 
 This requires running `loaddb.bat` with proper parameters:
 ```
 loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2025
 ```
 
-Repeat point 4 and 5 for all snapshot libraries. When it is done, you can query snapshot database with ease: 
+Repeat from step 1 to 5 for all snapshot libraries. When it is done, you can query snapshot database with ease: 
 ![alt phlib](/img/PHLIB.JPG)
 
 
@@ -113,7 +113,13 @@ loaddb.bat H:\PHLIB.db H:\PHLIB.SQLITE\2026
 ```
 
 
-#### III. Bibliography 
+#### III. Reminiscence
+It is a journey of the past; it is a quest to the future. 
+
+
+reminiscence
+
+#### IV. Bibliography 
 1. [SQLite Is ULTIMATE Choice For 99% of Projects](https://youtu.be/9RArbqGOvsw)
 2. [The Book of Disquiet by Fernando Pessoa](https://dn720004.ca.archive.org/0/items/english-collections-1/Book%20of%20Disquiet%2C%20The%20-%20Fernando%20Pessoa.pdf)
 
@@ -124,7 +130,7 @@ In SQLite, “files” don’t exist inside the database — everything is store
 2. **Total database file size in GB** — using page size × page count.
 Here are two SQL snippets you can run directly in SQLite:
 
-1️⃣ Calculate number of “files” (schema objects
+1️⃣ Calculate number of “files” (schema objects)
 ```
 -- Count all objects in the database schema
 SELECT type, COUNT(*) AS object_count
@@ -151,4 +157,4 @@ FROM pragma_page_count(), pragma_page_size();
 - [Reflux](https://github.com/Albert0i/albert0i.github.io/blob/main/reflux.md)
 
 
-### EOF (2026/01/31)
+### EOF (2026/02/10)
