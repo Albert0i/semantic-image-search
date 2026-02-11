@@ -1,9 +1,9 @@
 /*
    scanFolderCont.js 
 */
-import { db } from './utils/sqlite.js';
-import { getImageCaption } from './utils/captioner.js';
-import { sha256FileSync } from './utils/utils.js';
+import { db } from './utils/sqlite.js'
+import { getImageCaption } from './utils/captioner.js'
+import { sha256FileSync } from './utils/utils.js'
 
 async function main() {
   console.log('🧭 Starting updating database...');
@@ -12,32 +12,25 @@ async function main() {
   const rows = db.prepare('SELECT id, title, fullPath, hash FROM images;').all();
 
   const updateStmt = db.prepare(`
-    UPDATE images 
-    SET title = ?, hash = ?, indexedAt = ?, updateIdent = updateIdent + 1 
-    WHERE id = ?;
+    UPDATE images SET title = ?, hash = ?, indexedAt=?, updateIdent=updateIdent + 1 WHERE id = ?;
   `);
 
   for (const row of rows) {
     try {
       const filePath = row.fullPath;
-      const now = new Date(Date.now() + 8 * 60 * 60 * 1000);
+      const now = new Date(Date.now() + 8 * 60 * 60 * 1000);      
 
       if (row.title === '' && row.hash === '') {
-        try {
-          const output = await getImageCaption(filePath);
+        getImageCaption(filePath).then(output => { 
+          //console.log('generated_text = ', output[0].generated_text) 
           const hash = sha256FileSync(filePath);
-
-          updateStmt.run(
-            output[0].generated_text,
-            hash,
-            now.toISOString(),
-            row.id
-          );
-
+  
+          updateStmt.run(output[0].generated_text, hash, now.toISOString(), row.id)
+          
           console.log(`✅ Updated: ${filePath}`);
-        } catch (error) {
-          console.error(`❌ Error processing ${filePath}:`, error);
-        }
+        }).catch(error => {
+          console.log(error)
+        })
       } else {
         console.log(`⏭️ Skipping: ${filePath}`);
       }
