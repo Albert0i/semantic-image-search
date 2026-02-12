@@ -17,3 +17,4 @@ node_modules
 /src/generated/prisma
 
 /visual-basic
+/audit
