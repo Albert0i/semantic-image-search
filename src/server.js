@@ -10,6 +10,8 @@ import { fileURLToPath } from "url";
 import homeRoute from './routes/home.js'; // adjust path if needed
 // Import the API route
 import apiRoute from './routes/api.js'; // adjust path if needed
+// Import the upload route
+import uploadRoute from './routes/upload.js'; // adjust path if needed
 
 // Get the current filename and directory
 const __filename = fileURLToPath(import.meta.url);
@@ -50,6 +52,9 @@ const port = process.env.PORT || 3000;
 app.use('/', homeRoute);
 // Mount all API route under /api/v1
 app.use('/api/v1', apiRoute);
+
+// Mount upload route under /upload
+app.use('/upload', uploadRoute);
 
 // 404 route (catch-all)
 app.use((req, res) => {
