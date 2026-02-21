@@ -1,4 +1,3 @@
-
 #
 # Xenova/clip-vit-base-patch16 → smaller, faster, lighter model 
 # (~86M parameters). Good for real‑time use, lower memory, quick embedding generation.
